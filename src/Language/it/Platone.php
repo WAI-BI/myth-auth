@@ -36,7 +36,7 @@ return [
     "invita_uuid"   =>  "Invia numero ID",
     "uuid"  =>  "numero ID",
     "inserisci_codice_uuid" =>  "Per proseguire recupera il numero ID presente nella tua area privata OAM e inserisci il codice nella FORM sottostante.",
-    "error_during_uuid_confirm" =>  "Errore di autenticazione con IL numero ID fornito. Rimangono {0, number} tentativi",
+    "error_during_uuid_confirm" =>  "Errore di autenticazione con il numero ID fornito. Rimangono {0, number} tentativi",
     "errore_google_captcha" =>  "Spiacente errore nel reCaptcha",
     "prima_di_registrarti_leggi_il_nostro_documento_privacy"    =>  "Prima di procedere ad una registrazione si prega di leggere il documento sulla <a href=\"page/privacy-policy\" target=\"_blank\">Privacy</a>",
     "autorizzo_trattamento" => "Autorizzo il trattamento dei miei dati personali ai sensi del D.Lgs. 196/2003 e all’art. 13 GDPR 679/16.",
