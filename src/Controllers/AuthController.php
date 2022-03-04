@@ -197,8 +197,8 @@ class AuthController extends Controller
 		// Validate basics first since some password rules rely on these fields
 		$rules = [
 			//'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-			'first_name' => 'required|alpha_numeric_space|min_length[3]|max_length[30]',
-			'last_name' => 'required|alpha_numeric_space|min_length[3]|max_length[30]',
+			'first_name' => 'required|min_length[3]|max_length[255]',
+			'last_name' => 'required|min_length[3]|max_length[255]',
 			'cod_fis' => 'required|alpha_numeric_space|min_length[16]|max_length[16]',
 			'phone' => 'required|alpha_numeric_space|min_length[3]|max_length[13]',
 			'email'    => 'required|valid_email|is_unique[users.email]',
