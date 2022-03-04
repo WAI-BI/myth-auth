@@ -63,5 +63,8 @@ return [
     "register_five"     =>  "La registrazione è consentita ai primi 3.000 soggetti che ne completeranno l’<i>iter</i> entro il 20 marzo 2022.Il mancato rispetto di tali termini non consentirà la registrazione al portale per la partecipazione all’evento in modalità <i>live</i>.<br><u>È consentito registrarsi alla piattaforma anche in un momento successivo ed accedere alla registrazione dell’evento per il riconoscimento dell’aggiornamento professionale previsto, nel rispetto delle condizioni sopra esplicitate (partecipazione per almeno il 75% dell’evento).</u>",
     "register_six"  =>  "Per maggiori informazioni sulla registrazione alla piattaforma è possibile consultare la <a href=\"" . base_url("page/guida-registrazione-piattaforma") . "\" target=\"_blank\">Guida alla Registrazione.</a>",
     "register_seven"    =>  "Per maggiori informazioni sulle modalità di partecipazione <a href=\"" . base_url("page/pagina-informativa-convegno-oam") . "\" target=\"_blank\">clicca qui</a>.",
+    "notPhoneActivatedId"   =>  "Il tuo ID non risulta ancora confermato",
+    "activationResendId"    =>  "Verifica il tuo ID per continuare l'attivazione dell'account",
+    "activationResendPhone" =>  "Verifica il tuo OTP ricevuto via SMS per continuare l'attivazione dell'account",
 
 ];

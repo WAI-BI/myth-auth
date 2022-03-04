@@ -148,7 +148,7 @@ class AuthController extends Controller
         // check if already logged in.
 		if ($this->auth->check())
 		{
-			
+
 			return redirect()->to(base_url('frontend'))->with('message', lang('Platone.sei_gia_autenticato'));
 		}
 
@@ -254,7 +254,7 @@ class AuthController extends Controller
 		if (!$cf_validator->ValidaCodiceFiscale($user->cod_fis)) {
 			return redirect()->route('register')->with('error', array("cod_fis" => lang('Platone.codice_fiscale_fornito_non_corretto')));
 		}
-		
+
 		//controllo che il codice fiscale sia presente nella tabella degli invitati
 		$auc = new AuthGuuidCodfis();
 		$check_cf = $auc->where("cod_fis", $user->cod_fis)
@@ -280,9 +280,9 @@ class AuthController extends Controller
 
 					$data_anagrafe = array(
 						'user_id' => $users->getInsertID(),
-						'cod_fis' => $user->cod_fis, 
-						'cognome' => $user->last_name, 
-						'nome' => $user->first_name, 
+						'cod_fis' => $user->cod_fis,
+						'cognome' => $user->last_name,
+						'nome' => $user->first_name,
 						'cellulare' => $user->phone,
 						'email' => $user->email,
 					);
@@ -296,7 +296,7 @@ class AuthController extends Controller
 				{
 					$activator = service('activator');
 
-				
+
 
 					$sent = $activator->send($user);
 
@@ -309,7 +309,7 @@ class AuthController extends Controller
 					return redirect()->route('login')->with('message', lang('Auth.activationSuccess'));
 				} elseif ($this->config->requireSMSOTP !== null) {
 
-					
+
 
 					if (isset($check_cf['uuid']) AND (!empty($check_cf['uuid']))) {
 						return redirect()->to(base_url('uuid_otp/'.$data['username']))->with('message', lang('Platone.activationUuidSuccess'));
@@ -318,16 +318,16 @@ class AuthController extends Controller
 						$activator = service('activator');
 
 						$sent = $activator->sendOTP($user);
-	
+
 						if (! $sent)
 						{
 							return redirect()->route('register')->withInput()->with('error', $activator->error() ?? lang('Auth.unknownError'));
 						}
-	
+
 						// Success!
 						return redirect()->to(base_url('sms_otp/'.$data['username']))->with('message', lang('Platone.activationPhoneSuccess'));
 					}
-					
+
 				}
 
 				// Success!
@@ -447,7 +447,7 @@ class AuthController extends Controller
 
 		//devo recuperare i dati dell'utente
 		/*$user_to_reset = $users->where("reset_hash", $this->request->getPost('token'))->first();
-		
+
 		if (!isset($user_to_reset->email)) {
 			return redirect()->route('login')->with('error', lang('Platone.utente_non_resettabile'));
 		}*/
@@ -591,7 +591,7 @@ class AuthController extends Controller
 
 	private function clean($string) {
 		$string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-	 
+
 		return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 	}
 
@@ -604,10 +604,10 @@ class AuthController extends Controller
 
 		$otp = $this->request->getPost('otp');
 
-		
 
-		
-		
+
+
+
 		if ($data) {
 
 			//controllo se il numero è da attivare e se l'account non è attivo
@@ -618,7 +618,7 @@ class AuthController extends Controller
 					$rules = [
 						'otp'		=> 'required',
 					];
-			
+
 					if (! $this->validate($rules))
 					{
 						return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -658,7 +658,7 @@ class AuthController extends Controller
 					$rules = [
 						'otp'		=> 'required',
 					];
-			
+
 					if (! $this->validate($rules))
 					{
 						return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -675,7 +675,7 @@ class AuthController extends Controller
 				);
 
 				$users->update($data->id, $user_data);
-				
+
 
 				if ($this->config->requireActivation !== null)
 				{
@@ -744,7 +744,7 @@ class AuthController extends Controller
 					$rules = [
 						'uuid'		=> 'required',
 					];
-			
+
 					if (! $this->validate($rules))
 					{
 						return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -812,10 +812,11 @@ class AuthController extends Controller
 				//aggiorno l'utente settandono con il phone_active = 1
 				$user_data = array(
 					'activate_hash'	=>	$user->activate_hash,
+                    'phone_active'  =>  '1',
 				);
 
 				$users->update($user->id, $user_data);
-				
+
 
 				if ($this->config->requireActivation !== null)
 				{
@@ -839,7 +840,7 @@ class AuthController extends Controller
 				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 			}
 		} else {
-		
+
 			//reindirizzo alla login utente non trovato
 			return redirect()->back()->withInput()->with('errors', array("uuid" => lang("Platone.error_during_uuid_confirm")));
 		}
@@ -849,7 +850,7 @@ class AuthController extends Controller
     {
         $recaptchaResponse = trim($this->request->getVar('g-recaptcha-response'));
 
-		
+
         // form data
         $secret = env('RECAPTCHAV2_SECRET');
 
@@ -924,11 +925,11 @@ class AuthController extends Controller
 					$users = model(UserModel::class);
 					$user  = $users->where("id", $user_id)->first();
 					$session_id = session_id();
-				
+
 					//controllo se è stato generato già un token OTP
 					$email_otp = $AuthUserOtp->where("session_id", $session_id)->where("user_id", $user->id)->first();
-		
-					if (!isset($email_otp['otp'])) 
+
+					if (!isset($email_otp['otp']))
 					{
 						//genero OTP
 						$user_otp_update = $user->generateSMSOTP();
@@ -940,17 +941,17 @@ class AuthController extends Controller
 							'otp'			=>	$otp,
 							'date'			=>	date("Y-m-d H:i:s", time()),
 						);
-		
+
 						if ($AuthUserOtp->save($data)) {
 							$activator = service('activator');
 							$sent = $activator->sendEmailOTP($user);
 							if (!$sent) {
-								
-						
+
+
 								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
 
 							}
-		
+
 						} else {
 							//mando messaggio di errore e torno alla login
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));
@@ -971,17 +972,17 @@ class AuthController extends Controller
 					return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 
 				}
-				
+
 			} else {
 				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 
 			}
-			
-		
+
+
 	}
 
 	public function verifyEmailOTP() {
-		
+
 		if ($this->config->allowOTPEmail) {
 			$user_id =  $this->session->get("logged_in");
 			$otp = $this->request->getPost("otp");
@@ -1006,16 +1007,16 @@ class AuthController extends Controller
 					'success'		=>	'1',
 				);
 				if ($AuthUserOtpAttempts->save($data_attempts)) {
-					return redirect()->route('login')->with('message', array(lang('Platone.otp_confermato')));	
+					return redirect()->route('login')->with('message', array(lang('Platone.otp_confermato')));
 				} else {
-					return redirect()->route('two_step')->with('message_error', array(lang('Platone.impossibie_salvate_otp_attempts')));	
+					return redirect()->route('two_step')->with('message_error', array(lang('Platone.impossibie_salvate_otp_attempts')));
 				}
 			}
-			else 
+			else
 			{
-				return redirect()->route('two_step')->with('message_error', array(lang('Platone.si_prega_di_riprovare')));	
+				return redirect()->route('two_step')->with('message_error', array(lang('Platone.si_prega_di_riprovare')));
 			}
-			
+
 
 		} else {
 			return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));

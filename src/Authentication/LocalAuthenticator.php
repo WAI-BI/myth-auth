@@ -5,6 +5,8 @@ use Myth\Auth\Entities\User;
 use Myth\Auth\Exceptions\AuthException;
 use Myth\Auth\Password;
 use Myth\Auth\Models\AuthUserOtpAttempts;
+use Myth\Auth\Models\AuthGuuidCodfis;
+
 
 class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface
 {
@@ -37,6 +39,30 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
 
             $this->error = lang('Auth.userIsBanned');
+
+            $this->user = null;
+            return false;
+        }
+
+        if (! $this->user->isPhoneActivated()) {
+            // Always record a login attempt, whether success or not.
+            $ipAddress = service('request')->getIPAddress();
+            $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
+
+            $param = http_build_query([
+                'login' => urlencode($credentials['email'] ?? $credentials['username'])
+            ]);
+
+            //controllo se ha un ID associato o se deve confermare veramente il suo telefono
+            $auc = new AuthGuuidCodfis();
+
+            $check = $auc->where("cod_fis", $this->user->cod_fis)->first();
+
+            if (isset($check['uuid']) AND $check['uuid'] != '') {
+                $this->error = lang('Platone.notPhoneActivatedId') .' '. anchor(base_url('uuid_otp/'.$this->user->username), lang('Platone.activationResendId'));
+            } else {
+                $this->error = lang('Platone.notPhoneActivated') .' '. anchor(base_url('sms_otp/'.$this->user->username), lang('Platone.activationResendPhone'));
+            }
 
             $this->user = null;
             return false;
@@ -80,7 +106,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
                 //controllo che abbia realmente eseguito un accesso con OTP
                 $AuthUserOtpAttempts = new AuthUserOtpAttempts();
                 $check = $AuthUserOtpAttempts->where("user_id", $this->user->id)->where("session_id", session_id())->where("success", "1")->first();
-                
+
                 if (!$check) {
                     throw new RedirectException(route_to('two_step'));
 

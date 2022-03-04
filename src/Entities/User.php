@@ -155,6 +155,16 @@ class User extends Entity
         return isset($this->attributes['active']) && $this->attributes['active'] == true;
     }
 
+    /**
+     * Checks to see if a user have activated phone or uuid
+     *
+     * @return bool
+     */
+    public function isPhoneActivated(): bool
+    {
+        return isset($this->attributes['phone_active']) && $this->attributes['phone_active'] == true;
+    }
+
 	/**
 	 * Bans a user.
 	 *
