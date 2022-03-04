@@ -66,5 +66,5 @@ return [
     "notPhoneActivatedId"   =>  "Il tuo ID non risulta ancora confermato",
     "activationResendId"    =>  "Verifica il tuo ID per continuare l'attivazione dell'account",
     "activationResendPhone" =>  "Verifica il tuo OTP ricevuto via SMS per continuare l'attivazione dell'account",
-
+    "notPhoneActivated" =>  "Il tuo numero di telefono non risulta ancora confermato."
 ];
