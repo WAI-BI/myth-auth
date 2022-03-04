@@ -257,7 +257,10 @@ class AuthController extends Controller
 		
 		//controllo che il codice fiscale sia presente nella tabella degli invitati
 		$auc = new AuthGuuidCodfis();
-		$check_cf = $auc->where("cod_fis", $user->cod_fis)->first();
+		$check_cf = $auc->where("cod_fis", $user->cod_fis)
+		->where("first_name", $user->first_name)
+		->where("last_name", $user->last_name)
+		->first();
 
 		//controllo che in anagrafica non sia presente un utente che abbia il medesimo codice fiscale altrimenti mando in errore
 		$wa = new WebinarAnagrafe();
