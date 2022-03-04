@@ -15,6 +15,7 @@ class UserModel extends Model
     protected $allowedFields = [
         'email', 'username', 'password_hash', 'reset_hash', 'reset_at', 'reset_expires', 'activate_hash',
         'status', 'status_message', 'active', 'force_pass_reset', 'permissions', 'deleted_at',
+        'cod_fis', 'phone', 'last_name', 'first_name', 'phone_hash', 'phone_active'
     ];
 
     protected $useTimestamps = true;
@@ -23,6 +24,10 @@ class UserModel extends Model
         'email'         => 'required|valid_email|is_unique[users.email,id,{id}]',
         'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
         'password_hash' => 'required',
+        'cod_fis'       =>  'required',
+        'phone'         =>  'required|alpha_numeric_punct',
+        'last_name'       =>  'required|min_length[3]',
+        'first_name'         =>  'required|min_length[3]',
     ];
     protected $validationMessages = [];
     protected $skipValidation = false;

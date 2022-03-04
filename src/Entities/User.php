@@ -114,6 +114,12 @@ class User extends Entity
 		return $this;
 	}
 
+    public function generateSMSOTP()
+    {
+        $this->attributes['phone_hash'] = mt_rand(10000,99999);
+		return $this;
+    }
+
     /**
      * Activate user.
      *

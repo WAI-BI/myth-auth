@@ -1,11 +1,12 @@
-<p>Someone requested a password reset at this email address for <?= site_url() ?>.</p>
+<p><?=lang("Platone.ricevuta_richiesta_modifica_password")?></p>
 
-<p>To reset the password use this code or URL and follow the instructions.</p>
+<p><?=lang("Platone.istruzioni_per_completare_il_reset")?></p>
 
-<p>Your Code: <?= $hash ?></p>
+<p><?=lang("Platone.visita_la")?> <a href="<?= base_url('reset-password') . '?token=' . $hash ?>"><?=lang("Platone.pagina_di_reset")?></a>.</p>
 
-<p>Visit the <a href="<?= site_url('reset-password') . '?token=' . $hash ?>">Reset Form</a>.</p>
+<p><?=lang("Platone.scegli_la_nuova_password_e_confermala")?></p>
 
 <br>
 
-<p>If you did not request a password reset, you can safely ignore this email.</p>
+<hr />
+<p><?=lang("Platone.se_non_hai_richiesto_reset")?>.</p>

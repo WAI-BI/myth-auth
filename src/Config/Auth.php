@@ -14,7 +14,7 @@ class Auth extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $defaultUserGroup;
+	public $defaultUserGroup = 'registered';
 
 	/**
 	 * --------------------------------------------------------------------
@@ -35,12 +35,16 @@ class Auth extends BaseConfig
 	 * @var array
 	 */
 	public $views = [
-		'login'		   => 'Myth\Auth\Views\login',
-		'register'		=> 'Myth\Auth\Views\register',
-		'forgot'		  => 'Myth\Auth\Views\forgot',
-		'reset'		   => 'Myth\Auth\Views\reset',
-		'emailForgot'	 => 'Myth\Auth\Views\emails\forgot',
-		'emailActivation' => 'Myth\Auth\Views\emails\activation',
+		'login'		   		=> 'login',
+		'register'			=> 'register',
+		'forgot'		  	=> 'forgot',
+		'reset'		   		=> 'reset',
+		'emailForgot'	 	=> 'Myth\Auth\Views\emails\forgot',
+		'emailActivation' 	=> 'Myth\Auth\Views\emails\activation',
+		'emailOTP'			=>	'Myth\Auth\Views\emails\emailOTP',
+		'send_sms_otp'		=>	'Myth\Auth\Views\platone\send_sms_otp',
+		'send_uuid'			=>	'Myth\Auth\Views\platone\send_uuid',
+		'two_step'			=>	'Myth\Auth\Views\platone\send_email_otp',
 	];
 
 	/**
@@ -64,6 +68,10 @@ class Auth extends BaseConfig
 	public $validFields = [
 		'email',
 		'username',
+		'cod_fis',
+		'first_name',
+		'last_name',
+		'phone'
 	];
 
 	/**
@@ -139,6 +147,29 @@ class Auth extends BaseConfig
 
 	/**
 	 * --------------------------------------------------------------------
+	 * Allow CSV Codice Fiscale Controll
+	 * --------------------------------------------------------------------
+	 * 
+	 * When enabled user registered must have his Fiscal Code must be inside
+	 * e CSV files.
+	 *
+	 * @var bool
+	 */
+	public $allowCSVcontrol = true;
+
+	/**
+	 * --------------------------------------------------------------------
+	 * Allow OTP Email on Login
+	 * --------------------------------------------------------------------
+	 * 
+	 * When enabled user login have 2-step verification with email
+	 *
+	 * @var bool
+	 */
+	public $allowOTPEmail = true;
+
+	/**
+	 * --------------------------------------------------------------------
 	 * Require Confirmation Registration via Email
 	 * --------------------------------------------------------------------
 	 *
@@ -148,6 +179,19 @@ class Auth extends BaseConfig
 	 * @var string|null Name of the ActivatorInterface class
 	 */
 	public $requireActivation = 'Myth\Auth\Authentication\Activators\EmailActivator';
+
+	/**
+	 * --------------------------------------------------------------------
+	 * Require Confirmation phone via Otp
+	 * --------------------------------------------------------------------
+	 *
+	 * When enabled, every registered user will receive an OTP message
+	 * with an Confirmation code to write.
+	 *
+	 * @var string|null Name of the ActivatorInterface class
+	 */
+	public $requireSMSOTP = 'Myth\Auth\Authentication\Activators\PhoneActivator';
+
 
 	/**
 	 * --------------------------------------------------------------------
@@ -217,7 +261,7 @@ class Auth extends BaseConfig
 	 */
 	public $hashAlgorithm = PASSWORD_DEFAULT;
 
-	/*
+	/**
 	 * --------------------------------------------------------------------
 	 * ARGON2i/D Algorithm options
 	 * --------------------------------------------------------------------
@@ -269,7 +313,7 @@ class Auth extends BaseConfig
 	 *
 	 * @var int
 	 */
-	public $minimumPasswordLength = 8;
+	public $minimumPasswordLength = 12;
 
 	/**
 	 * --------------------------------------------------------------------
@@ -303,6 +347,10 @@ class Auth extends BaseConfig
 	public $userActivators = [
 		'Myth\Auth\Authentication\Activators\EmailActivator' => [
 			'fromEmail' => null,
+			'fromName' => null,
+		],
+		'Myth\Auth\Authentication\Activators\PhoneActivator' => [
+			'fromPhone' => null,
 			'fromName' => null,
 		],
 	];

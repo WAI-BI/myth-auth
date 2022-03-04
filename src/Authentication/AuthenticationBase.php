@@ -135,10 +135,9 @@ class AuthenticationBase
         {
             // Store our current user object
             $this->user = $this->userModel->find($userID);
-
+           
             return $this->user instanceof User;
         }
-
         return false;
     }
 

@@ -4,6 +4,7 @@ use CodeIgniter\Router\Exceptions\RedirectException;
 use Myth\Auth\Entities\User;
 use Myth\Auth\Exceptions\AuthException;
 use Myth\Auth\Password;
+use Myth\Auth\Models\AuthUserOtpAttempts;
 
 class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface
 {
@@ -73,6 +74,17 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             if ($this->user && $this->user->force_pass_reset)
             {
                 throw new RedirectException(route_to('reset-password') .'?token='.$this->user->reset_hash);
+            }
+
+            if ($this->config->allowOTPEmail) {
+                //controllo che abbia realmente eseguito un accesso con OTP
+                $AuthUserOtpAttempts = new AuthUserOtpAttempts();
+                $check = $AuthUserOtpAttempts->where("user_id", $this->user->id)->where("session_id", session_id())->where("success", "1")->first();
+                
+                if (!$check) {
+                    throw new RedirectException(route_to('two_step'));
+
+                }
             }
 
             return true;

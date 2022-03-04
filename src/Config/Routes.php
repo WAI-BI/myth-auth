@@ -22,4 +22,24 @@ $routes->group('', ['namespace' => 'Myth\Auth\Controllers'], function ($routes) 
     $routes->post('forgot', 'AuthController::attemptForgot');
     $routes->get('reset-password', 'AuthController::resetPassword', ['as' => 'reset-password']);
     $routes->post('reset-password', 'AuthController::attemptReset');
+
+    //OTP SMS
+    //sms_otp
+    $routes->get('sms_otp/(:segment)', 'AuthController::sendSMSOTP/$1');
+    $routes->post('sms_otp/(:segment)', 'AuthController::verifySMSOTP/$1');
+
+    //GUID Activation
+    //uuid_otp
+    $routes->get('uuid_otp/(:segment)', 'AuthController::sendUUID/$1');
+    $routes->post('uuid_otp/(:segment)', 'AuthController::verifyUUID/$1');
+
+    //SMS OTP RESEND
+    //sms_otp_resend
+    $routes->get('sms_otp_resend/(:segment)', 'AuthController::sms_otp_resend/$1');
+
+    //OTP EMAIL LOGIN
+    $routes->get('two_step', 'AuthController::sendEmailOTP', ['as' => 'two_step']);
+    $routes->post('two_step', 'AuthController::verifyEmailOTP');
+
+
 });

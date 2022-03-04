@@ -19,14 +19,25 @@ class UserActivator extends BaseActivator implements ActivatorInterface
 			return true;
 		}
 
-		$className = $this->config->requireActivation;
+		/**
+		 * @todo questo controllo fatto in questa maniera non regge
+		 * per fare uno switch corretto bisogna controllare se l'utente ha un phone_active su 1 significa in quel caso
+		 * che ha confermato il suo numero di telefono
+		 * 
+		 */
+		if ($this->config->requireSMSOTP) {
+			$className = $this->config->requireSMSOTP;
+		} else {
+			$className = $this->config->requireActivation;
+		}
+		
 
 		$class = new $className();
 		$class->setConfig($this->config);
 
 		if ($class->send($user) === false)
 		{
-            log_message('error', "Failed to send activation messaage to: {$user->email}");
+            log_message('error', "Failed to send activation message to: {$user->email}");
 			$this->error = $class->error();
 
 			return false;
