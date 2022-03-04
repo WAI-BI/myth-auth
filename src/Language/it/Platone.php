@@ -16,7 +16,7 @@ return [
     "first_name"                =>  "Nome",
     "last_name"                 =>  "Cognome",
     "activationPhoneSuccess"    =>  "Conferma il tuo numero di telefono inserendo il codice di 5 cifre ricevuto via SMS",
-    "usa_il_codice_per_confermare_telefono" =>  "da Platone - usa questo codice per confermare il tuo numero di telefono: ",
+    "usa_il_codice_per_confermare_telefono" =>  "da OAM - usa questo codice per confermare il tuo numero di telefono: ",
     "si_prega_di_progedere_con_una_registrazione"   =>  "Si prega di procedere con una registrazione",
     "si_prega_di_autenticarsi"  =>  "Si prega di autenticarsi al sistema",
     "inserisci_codice_otp"  =>  "Per proseguire inserisci il codice numerico di 5 cifre che hai ricevuto via SMS al numero di cellulare che hai fornito in fase di registrazione.",
