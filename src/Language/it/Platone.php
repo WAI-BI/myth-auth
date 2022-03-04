@@ -23,7 +23,7 @@ return [
     "inserisci_codice_otp_email"    =>  "Per proseguire inserisci il codice numerico di 5 cifre che hai ricevuto via Email all'indirizzo email che hai fornito in fase di registrazione.",
     "otp"   =>  "Codice OTP",
     "invita_otp" => "Invia il codice OTP",
-    "error_during_otp_confirm"  =>  "Conferma OTP fallita si prega di controllare che il codice indicato sia corretto",
+    "error_during_otp_confirm"  =>  "Conferma OTP fallita si prega di controllare che il codice indicato sia corretto. Rimangono {0, number} tentativi",
     "anagrafe_presente_in_db"   =>  "Attenzione l'anagrafe è già presente a sistema si prega di utilizzare i dati di accesso precedentemente creati.",
     "codice_fiscale_fornito_non_corretto"   =>  "Il codice fiscale fornito non è formalmente corretto. Si prega di controllare",
     "file_non_presente" => "File non presente: ",
@@ -66,5 +66,9 @@ return [
     "notPhoneActivatedId"   =>  "Il tuo ID non risulta ancora confermato",
     "activationResendId"    =>  "Verifica il tuo ID per continuare l'attivazione dell'account",
     "activationResendPhone" =>  "Verifica il tuo OTP ricevuto via SMS per continuare l'attivazione dell'account",
-    "notPhoneActivated" =>  "Il tuo numero di telefono non risulta ancora confermato."
+    "notPhoneActivated" =>  "Il tuo numero di telefono non risulta ancora confermato.",
+    "bannato_per_troppi_tentativi_errati_sms_otp"   =>  "Esaurito i tentativi a disposizione per confermare SMS OTP",
+    "EmailBanSubjectSMSOTP" =>  "Hai esaurito i tentativi a tua disposizione per confermare OTP via SMS",
+    "ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_sms_otp"  =>  "Ricevi questa email perchè hai esaurito i tentativi a tua disposizione per confermare OTP via SMS",
+    "ti_invitiamo_a_riprovare_tra_almeno_due_ore"   =>  "Ti invitiamo a riprovare tra almeno due ore."
 ];

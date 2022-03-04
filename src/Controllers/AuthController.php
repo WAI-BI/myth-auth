@@ -11,6 +11,7 @@ use App\Models\Webinar;
 use App\Models\WebinarAnagrafe;
 use Myth\Auth\Models\AuthUserOtp;
 use Myth\Auth\Models\AuthUserOtpAttempts;
+use Myth\Auth\Models\AuthUserSmsOtpAttempts;
 
 use CodiceFiscale;
 
@@ -699,8 +700,40 @@ class AuthController extends Controller
 				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 			}
 		} else {
-			//reindirizzo alla login utente non trovato
-			return redirect()->back()->withInput()->with('errors', array(lang("Platone.error_during_otp_confirm")));
+            //prima di reinderizzare devo salvare il tentativo andato fallito
+            $ip = $this->request->getIPAddress();
+            $user = $users->where("username", $username)->first();
+            if (isset($user->id)) {
+                $sms_otp_attempts = array(
+                    'ip_address'    =>  $ip,
+                    'user_id'       =>  $user->id,
+                    'date'          =>  date("Y-m-d H:i:s", time()),
+                    'success'       =>  '0',
+                );
+                $soa = new AuthUserSmsOtpAttempts();
+
+                $soa->insert($sms_otp_attempts);
+            }
+
+            //conto i tentativi sbagliati dell'utente
+            $fault = $soa->select("COUNT(id) AS tot")->where("user_id", $user->id)->where("date >=", date("Y-m-d", time()))->first();
+
+            $remain = 5-$fault['tot'];
+
+            if ($remain <= 0) {
+                //devo banner l'utente e tornare alla login
+                $user->ban(lang('Platone.bannato_per_troppi_tentativi_errati_sms_otp'));
+                $users->update($user->id, $user);
+                //devo mandare una email all'utente avvisandolo che è stato bannato e devo provare a registrarsi tra due ore.
+                $activator = service('activator');
+                $sent = $activator->sendEmailRetry($user);
+               return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_sms_otp'));
+            } else {
+                //reindirizzo alla login utente non trovato
+                return redirect()->back()->withInput()->with('errors', array(lang("Platone.error_during_otp_confirm", array($remain))));
+            }
+
+
 		}
 	}
 
@@ -840,6 +873,7 @@ class AuthController extends Controller
 				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 			}
 		} else {
+            //devo tracciare il tentativo errato
 
 			//reindirizzo alla login utente non trovato
 			return redirect()->back()->withInput()->with('errors', array("uuid" => lang("Platone.error_during_uuid_confirm")));
@@ -1000,7 +1034,7 @@ class AuthController extends Controller
 				//salvo il fatto che il dato era corretto
 				$AuthUserOtpAttempts = new AuthUserOtpAttempts();
 				$data_attempts = array(
-					'id_address'	=>	$ip,
+					'ip_address'	=>	$ip,
 					'session_id'	=>	$session_id,
 					'user_id'		=>	$user_id,
 					'date'			=>	date("Y-m-d H:i:s", time()),

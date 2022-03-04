@@ -45,6 +45,7 @@ class Auth extends BaseConfig
 		'send_sms_otp'		=>	'Myth\Auth\Views\platone\send_sms_otp',
 		'send_uuid'			=>	'Myth\Auth\Views\platone\send_uuid',
 		'two_step'			=>	'Myth\Auth\Views\platone\send_email_otp',
+        'EmailBannedSMSOTP' =>  'Myth\Auth\Views\emails\emailbannedsmsotp',
 	];
 
 	/**
@@ -149,7 +150,7 @@ class Auth extends BaseConfig
 	 * --------------------------------------------------------------------
 	 * Allow CSV Codice Fiscale Controll
 	 * --------------------------------------------------------------------
-	 * 
+	 *
 	 * When enabled user registered must have his Fiscal Code must be inside
 	 * e CSV files.
 	 *
@@ -161,7 +162,7 @@ class Auth extends BaseConfig
 	 * --------------------------------------------------------------------
 	 * Allow OTP Email on Login
 	 * --------------------------------------------------------------------
-	 * 
+	 *
 	 * When enabled user login have 2-step verification with email
 	 *
 	 * @var bool
