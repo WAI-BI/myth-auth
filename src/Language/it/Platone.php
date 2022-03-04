@@ -36,7 +36,7 @@ return [
     "invita_uuid"   =>  "Invia numero ID",
     "uuid"  =>  "numero ID",
     "inserisci_codice_uuid" =>  "Per proseguire recupera il numero ID presente nella tua area privata OAM e inserisci il codice nella FORM sottostante.",
-    "error_during_uuid_confirm" =>  "Errore di autenticazione con IL numero ID fornito.",
+    "error_during_uuid_confirm" =>  "Errore di autenticazione con IL numero ID fornito. Rimangono {0, number} tentativi",
     "errore_google_captcha" =>  "Spiacente errore nel reCaptcha",
     "prima_di_registrarti_leggi_il_nostro_documento_privacy"    =>  "Prima di procedere ad una registrazione si prega di leggere il documento sulla <a href=\"page/privacy-policy\" target=\"_blank\">Privacy</a>",
     "autorizzo_trattamento" => "Autorizzo il trattamento dei miei dati personali ai sensi del D.Lgs. 196/2003 e all’art. 13 GDPR 679/16.",
@@ -70,5 +70,11 @@ return [
     "bannato_per_troppi_tentativi_errati_sms_otp"   =>  "Esaurito i tentativi a disposizione per confermare SMS OTP",
     "EmailBanSubjectSMSOTP" =>  "Hai esaurito i tentativi a tua disposizione per confermare OTP via SMS",
     "ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_sms_otp"  =>  "Ricevi questa email perchè hai esaurito i tentativi a tua disposizione per confermare OTP via SMS",
-    "ti_invitiamo_a_riprovare_tra_almeno_due_ore"   =>  "Ti invitiamo a riprovare tra almeno due ore."
+    "ti_invitiamo_a_riprovare_tra_almeno_due_ore"   =>  "Ti invitiamo a riprovare tra almeno due ore.",
+    "bannato_per_troppi_tentativi_errati_uuid"  =>  "Esaurito i tentativi a disposizione per confermare ID",
+    "errorSendingemailOTP"  =>  "Impossibile inviare email di comunicazione BAN per raggiungimento soglia limite tentativi OTP SMS",
+    "errorSendingemailUuid" =>  "Impossibile inviare email di comunicazione BAN per raggiungimento soglia limite tentativi veridica ID",
+    "EmailBanSubjectUuid"   =>  "Hai esaurito i tentativi a tua disposizione per confermare il tuo ID",
+    "ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_uuid" => "Ricevi questa email perchè hai esaurito i tentativi a tua disposizione per confermare il tuo ID",
+
 ];

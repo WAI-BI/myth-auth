@@ -46,6 +46,7 @@ class Auth extends BaseConfig
 		'send_uuid'			=>	'Myth\Auth\Views\platone\send_uuid',
 		'two_step'			=>	'Myth\Auth\Views\platone\send_email_otp',
         'EmailBannedSMSOTP' =>  'Myth\Auth\Views\emails\emailbannedsmsotp',
+        'EmailBannedUuid'   =>  'Myth\Auth\Views\emails\emailbanneduuid',
 	];
 
 	/**

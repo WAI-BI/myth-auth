@@ -12,6 +12,7 @@ use App\Models\WebinarAnagrafe;
 use Myth\Auth\Models\AuthUserOtp;
 use Myth\Auth\Models\AuthUserOtpAttempts;
 use Myth\Auth\Models\AuthUserSmsOtpAttempts;
+use Myth\Auth\Models\AuthUserUuidAttempts;
 
 use CodiceFiscale;
 
@@ -850,6 +851,17 @@ class AuthController extends Controller
 
 				$users->update($user->id, $user_data);
 
+                //salo anche il tentativo che ha avuto successo
+                $ip = $this->request->getIPAddress();
+                $uuid_attempts = array(
+                    'ip_address'    =>  $ip,
+                    'user_id'       =>  $user->id,
+                    'date'          =>  date("Y-m-d H:i:s", time()),
+                    'success'       =>  '1',
+                );
+                $uua = new AuthUserUuidAttempts();
+
+                $uua->insert($uuid_attempts);
 
 				if ($this->config->requireActivation !== null)
 				{
@@ -874,9 +886,39 @@ class AuthController extends Controller
 			}
 		} else {
             //devo tracciare il tentativo errato
+            //prima di reinderizzare devo salvare il tentativo andato fallito
+            $ip = $this->request->getIPAddress();
+            $user = $users->where("username", $username)->first();
+            if (isset($user->id)) {
+                $uuid_attempts = array(
+                    'ip_address'    =>  $ip,
+                    'user_id'       =>  $user->id,
+                    'date'          =>  date("Y-m-d H:i:s", time()),
+                    'success'       =>  '0',
+                );
+                $uua = new AuthUserUuidAttempts();
 
-			//reindirizzo alla login utente non trovato
-			return redirect()->back()->withInput()->with('errors', array("uuid" => lang("Platone.error_during_uuid_confirm")));
+                $uua->insert($uuid_attempts);
+            }
+
+            //conto i tentativi sbagliati dell'utente
+            $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $user->id)->where("date >=", date("Y-m-d", time()))->first();
+
+            $remain = 5-$fault['tot'];
+
+            if ($remain <= 0) {
+                //devo banner l'utente e tornare alla login
+                $user->ban(lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
+                $users->update($user->id, $user);
+                //devo mandare una email all'utente avvisandolo che è stato bannato e devo provare a registrarsi tra due ore.
+                $activator = service('activator');
+                $sent = $activator->sendEmailRetryUuid($user);
+                return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
+            } else {
+                //reindirizzo alla login utente non trovato
+                return redirect()->back()->withInput()->with('errors', array("uuid" => lang("Platone.error_during_uuid_confirm", array($remain))));
+            }
+
 		}
 	}
 

@@ -115,4 +115,29 @@ class EmailActivator extends BaseActivator implements ActivatorInterface
         return true;
 
     }
+
+    public function sendEmailRetryUuid(User $user = null): bool
+    {
+        $email = service('email');
+        $config = new Email();
+
+        $settings = $this->getActivatorSettings();
+
+        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
+              ->setTo($user->email)
+              ->setSubject(lang('Platone.EmailBanSubjectUuid'))
+              ->setMessage(view($this->config->views['EmailBannedUuid']))
+              ->setMailType('html')
+              ->send();
+
+        if (! $sent)
+        {
+
+            $this->error = lang('Platone.errorSendingemailUuid', [$user->email]);
+            return false;
+        }
+
+        return true;
+
+    }
 }
