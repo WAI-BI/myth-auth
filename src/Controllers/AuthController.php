@@ -1029,13 +1029,23 @@ class AuthController extends Controller
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));
 						}
 					} else {
-						/*$user->phone_hash = $email_otp['otp'];
 
-						$activator = service('activator');
-							$sent = $activator->sendEmailOTP($user);
-							if (!$sent) {
-								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
-							}*/
+                        $unixtime_log = strtotime($email_otp['date']);
+                        $unixtime = time();
+                        $dif = round($unixtime-$unixtime_log)/60;
+
+                        if ($dif > 10) {
+                            $user->phone_hash = $email_otp['otp'];
+                            $activator = service('activator');
+                            $sent = $activator->sendEmailOTP($user);
+                            if (!$sent) {
+                                return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
+                            }
+                        } else {
+                            $_SESSION["error"] = lang('Platone.riprova_tra_dieci_minuti');
+                        }
+
+						/**/
                         /**
                          * @todo non invio nuovamente OTP perchè già inviata precedentemente
                          * inserire nel caso controllo che manda nuovamente email

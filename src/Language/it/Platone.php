@@ -46,6 +46,7 @@ return [
     "username_non_esistente"    =>  "Impossibile procedere con il reinvio SMS.",
     "sms_nuovamente_inviato"    =>  "SMS nuovamente inviato. Ti preghiamo di inserire ultimo OTP inviato.",
     "riprova_piu_tardi"         =>  "Ti preghiamo di riprovare a inviare un nuovo SMS tra 10min.",
+    "riprova_tra_dieci_minuti"  => "Ti preghiamo di riprovare a inviare un nuovo OTP Email tra 10min.",
     "pravicy_label"             =>  "Privacy",
     "la_password_deve_contenere"    =>  "La password deve essere lunga almeno 12 caratteri. Contenere almeno un carattere minuscolo, almeno un carattere maiuscolo, almeno un numero e un carattere speciale.",
     "non_hai_ricevuto_email_otp"    =>  "Non hai ricevuto l'email contenente il codice OTP?",
