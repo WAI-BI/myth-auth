@@ -111,10 +111,6 @@ class AuthController extends Controller
 			return redirect()->to(route_to('reset-password') .'?token='. $this->auth->user()->reset_hash)->withCookies();
 		}
 
-		if ($this->config->allowOTPEmail) {
-			return redirect()->to(base_url('two_step'));
-		}
-
 		$redirectURL = session('redirect_url') ?? base_url('/frontend');
 		unset($_SESSION['redirect_url']);
 
@@ -1033,13 +1029,17 @@ class AuthController extends Controller
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));
 						}
 					} else {
-						$user->phone_hash = $email_otp['otp'];
+						/*$user->phone_hash = $email_otp['otp'];
 
 						$activator = service('activator');
 							$sent = $activator->sendEmailOTP($user);
 							if (!$sent) {
 								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
-							}
+							}*/
+                        /**
+                         * @todo non invio nuovamente OTP perchè già inviata precedentemente
+                         * inserire nel caso controllo che manda nuovamente email
+                         */
 					}
 					return $this->_render($this->config->views['two_step'], [
 						'config' => $this->config,
@@ -1090,7 +1090,41 @@ class AuthController extends Controller
 			}
 			else
 			{
-				return redirect()->route('two_step')->with('message_error', array(lang('Platone.si_prega_di_riprovare')));
+                $users = model(UserModel::class);
+                $user = $users->where("id", $user_id)->first();
+                $ip = $this->request->getIPAddress();
+				//salvo il fatto che il dato era corretto
+				$AuthUserOtpAttempts = new AuthUserOtpAttempts();
+				$data_attempts = array(
+					'ip_address'	=>	$ip,
+					'session_id'	=>	$session_id,
+					'user_id'		=>	$user_id,
+					'date'			=>	date("Y-m-d H:i:s", time()),
+					'success'		=>	'0',
+				);
+				if ($AuthUserOtpAttempts->save($data_attempts)) {
+
+                     //conto i tentativi sbagliati dell'utente
+                    $fault = $AuthUserOtpAttempts->select("COUNT(id) AS tot")->where("user_id", $user->id)
+                    ->where("session_id", $session_id)
+                    ->where("date >=", date("Y-m-d", time()))->first();
+
+                    $remain = 5-$fault['tot'];
+
+                    if ($remain <= 0) {
+                        //devo banner l'utente e tornare alla login
+                        $user->ban(lang('Platone.bannato_per_troppi_tentativi_errati_email_otp'));
+                        $users->update($user_id, $user);
+                        //foro il logout dell'utente
+                        return redirect()->route('logout')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_email_otp'));
+                    } else {
+                        return redirect()->back()->withInput()->with('error', array(lang('Platone.si_prega_di_riprovare_email_otp', array($remain))));
+                    }
+
+				} else {
+					return redirect()->route('two_step')->with('message_error', array(lang('Platone.impossibie_salvate_otp_attempts')));
+				}
+				//
 			}
 
 

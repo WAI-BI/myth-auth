@@ -108,8 +108,9 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
                 $check = $AuthUserOtpAttempts->where("user_id", $this->user->id)->where("session_id", session_id())->where("success", "1")->first();
 
                 if (!$check) {
-                    throw new RedirectException(route_to('two_step'));
-
+                    if ($this->user->status != 'banned') {
+                        throw new RedirectException(route_to('two_step'));
+                    }
                 }
             }
 

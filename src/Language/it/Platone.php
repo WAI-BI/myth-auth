@@ -76,5 +76,7 @@ return [
     "errorSendingemailUuid" =>  "Impossibile inviare email di comunicazione BAN per raggiungimento soglia limite tentativi veridica ID",
     "EmailBanSubjectUuid"   =>  "Hai esaurito i tentativi a tua disposizione per confermare il tuo ID",
     "ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_uuid" => "Ricevi questa email perchè hai esaurito i tentativi a tua disposizione per confermare il tuo ID",
+    "bannato_per_troppi_tentativi_errati_email_otp" =>  "Esaurito i tentativi a disposizione per confermare OTP Email",
+    "si_prega_di_riprovare_email_otp"   =>  "Conferma Email OTP fallita si prega di controllare che il codice indicato sia corretto. Rimangono {0, number} tentativi",
 
 ];
