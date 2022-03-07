@@ -39,7 +39,7 @@ return [
     "error_during_uuid_confirm" =>  "Errore di autenticazione con il numero ID fornito. Rimangono {0, number} tentativi",
     "errore_google_captcha" =>  "Spiacente errore nel reCaptcha",
     "prima_di_registrarti_leggi_il_nostro_documento_privacy"    =>  "Prima di procedere ad una registrazione si prega di leggere il documento sulla <a href=\"page/privacy-policy\" target=\"_blank\">Privacy</a>",
-    "autorizzo_trattamento" => "Autorizzo il trattamento dei miei dati personali ai sensi del D.Lgs. 196/2003 e all’art. 13 GDPR 679/16.",
+    "autorizzo_trattamento" => "Autorizzo il trattamento dei miei dati personali ai sensi del D.Lgs. 196/2003 e all’art. 13 GDPR 679/16. <a href=\"page/privacy-policy\" target=\"_blank\">Privacy</a>",
     "privacy_label" =>  "Consenso per la <a href=\"page/privacy-policy\" target=\"_blank\">Privacy</a>*:",
     "utente_non_resettabile"    =>  "Impossibile resettare la password",
     "non_hai_ricevuto_sms"  =>  "Non hai ricevuto SMS di conferma?",

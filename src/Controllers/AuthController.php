@@ -1018,22 +1018,16 @@ class AuthController extends Controller
 							$activator = service('activator');
 							$sent = $activator->sendEmailOTP($user);
 							if (!$sent) {
-
-
 								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
-
 							}
-
 						} else {
 							//mando messaggio di errore e torno alla login
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));
 						}
 					} else {
-
                         $unixtime_log = strtotime($email_otp['date']);
                         $unixtime = time();
                         $dif = round($unixtime-$unixtime_log)/60;
-
                         if ($dif > 10) {
                             $user->phone_hash = $email_otp['otp'];
                             $activator = service('activator');
@@ -1042,29 +1036,21 @@ class AuthController extends Controller
                                 return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
                             }
                         } else {
-                            $_SESSION["error"] = lang('Platone.riprova_tra_dieci_minuti');
+                            //non mando feedback
+                            //$_SESSION["error"] = lang('Platone.riprova_tra_dieci_minuti');
                         }
-
-						/**/
-                        /**
-                         * @todo non invio nuovamente OTP perchè già inviata precedentemente
-                         * inserire nel caso controllo che manda nuovamente email
-                         */
 					}
 					return $this->_render($this->config->views['two_step'], [
-						'config' => $this->config,
+						'config' => $this->config
 					]);
 				} else {
 					return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 
 				}
-
 			} else {
 				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
 
 			}
-
-
 	}
 
 	public function verifyEmailOTP() {
