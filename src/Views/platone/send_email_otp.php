@@ -22,14 +22,14 @@
 
                 <p><?=lang('Platone.inserisci_codice_otp_email')?></p>
 
-                
+
 
                 <form class="user" action="<?php echo base_url("/two_step/"); ?>" method="POST">
                     <?= csrf_field() ?>
 
                     <div class="form-group">
                             <label for="otp"><?=lang('Platone.otp')?></label>
-                            <input type="number" min="10000" max="99999" class="form-control form-control-user <?php if(session('errors.otp')) : ?>is-invalid<?php endif ?>"
+                            <input type="number" class="form-control form-control-user <?php if(session('errors.otp')) : ?>is-invalid<?php endif ?>"
                                    name="otp" placeholder="<?=lang('Platone.otp')?>" value="<?= old('otp', $otp ?? '') ?>">
                             <div class="invalid-feedback">
                                 <?= session('errors.otp') ?>
@@ -44,7 +44,22 @@
                           <p><a href="<?=base_url('two_step')?>"><?=lang('Platone.non_hai_ricevuto_email_otp')?></a></p>
                         <?php endif; ?>
                 </form>
-               
+                <script>
+                    $(document).ready(function() {
+                        console.log("Sto avviando uno script jquery rimango in attesa della submit della FORM");
+                        $("form").on("submit", function(e) {
+                            var otp = $("input[name='otp']").val();
+                            if (otp < 10000 || otp > 99999) {
+                                $("input[name='otp']").addClass("is-invalid");
+                                $("div.invalid-feedback").html("Il formato dell'OTP inserito non è valido");
+                                return false;
+                            } else {
+                                $("input[name='otp']").removeClass("is-invalid");
+                                return true;
+                            }
+                        });
+                    });
+                </script>
               </div>
             </div>
           </div>
@@ -60,7 +75,7 @@
 
 <style>
 footer.sticky-footer {
-    
+
     position: absolute;
     bottom: 0;
     width: 100%;
