@@ -80,5 +80,7 @@ return [
     "ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_uuid" => "Ricevi questa email perchè hai esaurito i tentativi a tua disposizione per confermare il tuo ID",
     "bannato_per_troppi_tentativi_errati_email_otp" =>  "Esaurito i tentativi a disposizione per confermare OTP Email",
     "si_prega_di_riprovare_email_otp"   =>  "Conferma Email OTP fallita si prega di controllare che il codice indicato sia corretto. Rimangono {0, number} tentativi",
-
+    "indirizzo_email_gia_utilizzato"    =>  "L'indirizzo email risulta già utilizzato da un account presente a sistema. Se hai tentato precedentemente di iscriverti ma hai commesso troppi errori nelle fasi di controllo dati riprova tra due ore a registrarti nuovamente. Altrimenti prova ad autenticarti nel sistema con i dati di accesso precedentemente utilizzate.",
+    "phone_gia_utilizzato"              =>  "Il numero di telefono risulta già utilizzato da un account presente a sistema. Se hai tentato precedentemente di iscriverti ma hai commesso troppi errori nelle fasi di controllo dati riprova tra due ore a registrarti nuovamente. Altrimenti prova ad autenticarti nel sistema con i dati di accesso precedentemente utilizzate.",
+    "cod_fis_gia_utilizzato"            =>  "Il codice fiscale risulta già utilizzato da un account presente a sistema. Se hai tentato precedentemente di iscriverti ma hai commesso troppi errori nelle fasi di controllo dati riprova tra due ore a registrarti nuovamente. Altrimenti prova ad autenticarti nel sistema con i dati di accesso precedentemente utilizzate.",
 ];

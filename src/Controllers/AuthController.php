@@ -205,6 +205,12 @@ class AuthController extends Controller
 		$errors = [
 			'email' => [
 				'is_unique'	=>	lang("Platone.indirizzo_email_gia_utilizzato"),
+            ],
+            'phone' => [
+				'is_unique'	=>	lang("Platone.phone_gia_utilizzato"),
+			],
+            'cod_fis' => [
+				'is_unique'	=>	lang("Platone.cod_fis_gia_utilizzato"),
 			]
 		];
 
