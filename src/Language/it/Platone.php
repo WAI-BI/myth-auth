@@ -16,6 +16,8 @@ return [
     "first_name"                =>  "Nome",
     "last_name"                 =>  "Cognome",
     "email"                     =>  "Email",
+    "password"                  =>  "Password",
+    "pass_confirm"              =>  "Conferma password",
     "activationPhoneSuccess"    =>  "Conferma il tuo numero di telefono inserendo il codice di 5 cifre ricevuto via SMS",
     "usa_il_codice_per_confermare_telefono" =>  "da OAM - usa questo codice per confermare il tuo numero di telefono: ",
     "si_prega_di_progedere_con_una_registrazione"   =>  "Si prega di procedere con una registrazione",

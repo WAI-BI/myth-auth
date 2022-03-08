@@ -221,8 +221,8 @@ class AuthController extends Controller
 
 		// Validate passwords since they can only be validated properly here
 		$rules = [
-			'password'     => 'required|strong_password|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{12,30}$/]',
-			'pass_confirm' => 'required|matches[password]',
+			'password'     => ['label' => lang('Platone.password'), 'rules' => 'required|strong_password|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{12,30}$/]'],
+			'pass_confirm' => ['label' => lang('Platone.pass_confirm'), 'rules' => 'required|matches[password]'],
 		];
 
 		if (! $this->validate($rules))
