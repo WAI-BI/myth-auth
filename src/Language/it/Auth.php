@@ -20,7 +20,7 @@ return [
     // Activation
     'activationNoUser'          => 'Impossibile trovare un utente con questo codice di attivazione.',
     'activationSubject'         => 'Attiva il tuo account',
-    'activationSuccess'         => 'Conferma il tuo account facendo clic sul link di attivazione nell\'email che ti abbiamo inviato.',
+    'activationSuccess'         => 'Conferma il tuo account cliccando sul link di attivazione nell\'email che ti abbiamo inviato all\'indirizzo che ci hai indicato.',
     'activationResend'          => 'Invia ancora il messaggio di attivazione.',
     'notActivated'              => 'Questo account utente non è stato ancora attivato.',
     'errorSendingActivation'    => 'Impossibile inviare il messaggio di attivazione a: {0}',
@@ -42,7 +42,7 @@ return [
     // Passwords
     'errorPasswordLength'       => 'La password deve contenere almeno {0, number} caratteri.',
     'suggestPasswordLength'     => 'Una frase utilizzata come password - di lunghezza fino a 255 caratteri - la rende più sicura e facile da ricordare.',
-    'errorPasswordCommon'       => 'La password non deve essere una password comune.',
+    'errorPasswordCommon'       => 'Si consiglia di creare una password maggiormente complessa e meno comune',
     'suggestPasswordCommon'     => 'La password inserita è stata messa a confronto con oltre 65.000 password comuni, password violate e password interessate a leaks e hacks.',
     'errorPasswordPersonal'     => 'La password non possono contenere informazioni personali rielaborate.',
     'suggestPasswordPersonal'   => 'La password non dovrebbe contenere variazioni del tuo indirizzo email o del tuo nome utente.',
