@@ -62,12 +62,7 @@ return [
     'permissionNotFound'        => 'Impossibile trovare il permesso: {0}',
 
     // Banned
-    'userIsBanned'              => 'Hai inserito un OTP errato per 5 volte:<br />
-    <ul>
-    <li>Se stai tentando l\'accesso potrai riprovare tra 10 minuti</li>
-    <li>Se stai effettuando una nuova registrazione è necessario attendere 2h e procedere con una nuova registrazione.</li>
-    </ul>
-    ',
+    'userIsBanned'              => 'Hai inserito un OTP errato per 5 volte:<br /><ul><li>Se stai tentando l\'accesso potrai riprovare tra 10 minuti</li><li>Se stai effettuando una nuova registrazione è necessario attendere 2h e procedere con una nuova registrazione.</li></ul>',
 
     // Too many requests
     'tooManyRequests'           => 'Troppe richieste. Attendere {0, number} secondi.',

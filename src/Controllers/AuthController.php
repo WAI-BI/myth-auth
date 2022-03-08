@@ -197,12 +197,18 @@ class AuthController extends Controller
 			//'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
 			'first_name' => 'required|min_length[3]|max_length[255]',
 			'last_name' => 'required|min_length[3]|max_length[255]',
-			'cod_fis' => 'required|alpha_numeric_space|min_length[16]|max_length[16]',
-			'phone' => 'required|alpha_numeric_space|min_length[3]|max_length[13]',
+			'cod_fis' => 'required|alpha_numeric_space|min_length[16]|max_length[16]|is_unique[users.cod_fis]',
+			'phone' => 'required|alpha_numeric_space|min_length[3]|max_length[13]|is_unique[users.phone]',
 			'email'    => 'required|valid_email|is_unique[users.email]',
 		];
 
-		if (! $this->validate($rules))
+		$errors = [
+			'email' => [
+				'is_unique'	=>	lang("Platone.indirizzo_email_gia_utilizzato"),
+			]
+		];
+
+		if (! $this->validate($rules,$errors))
 		{
 			return redirect()->route('register')->withInput()->with('errors', $this->validator->getErrors());
 		}
