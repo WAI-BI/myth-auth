@@ -4,7 +4,7 @@
 
 <p><?=lang("Platone.visita_la")?> <a href="<?= base_url('reset-password') . '?token=' . $hash ?>"><?=lang("Platone.pagina_di_reset")?></a>.</p>
 
-<p><?=lang("Platone.scegli_la_nuova_password_e_confermala")?></p>
+<!-- <p><?=lang("Platone.scegli_la_nuova_password_e_confermala")?></p> -->
 
 <br>
 

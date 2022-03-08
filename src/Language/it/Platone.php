@@ -2,9 +2,9 @@
 
 return [
     "ricevuta_richiesta_modifica_password"  =>  "Ricevuta richiesta di modifica password.",
-    "istruzioni_per_completare_il_reset"  =>  "Per resettare la tua password dovrai cliccare sul link di reset di questa email.",
-    "visita_la" =>  "Visita la",
-    "pagina_di_reset"   =>  "Pagina di reset",
+    "istruzioni_per_completare_il_reset"  =>  "Per modificare la tua password dovrai cliccare sul link di seguito:",
+    "visita_la" =>  "Modifica la tua",
+    "pagina_di_reset"   =>  "Password",
     "se_non_hai_richiesto_reset"  =>  "Se non hai mai richiesto di modificare la tua password, ignora questa email",
     "scegli_la_nuova_password_e_confermala" =>  "Devi scegliere la nuova password e confermarla nella buca di conferma",
     "ricevi_questa_email_di_attivazione"    =>  "Ricevi questa email perché è stato creato un account.",
