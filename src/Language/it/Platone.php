@@ -7,7 +7,7 @@ return [
     "pagina_di_reset"   =>  "Password",
     "se_non_hai_richiesto_reset"  =>  "Se non hai mai richiesto di modificare la tua password, ignora questa email",
     "scegli_la_nuova_password_e_confermala" =>  "Devi scegliere la nuova password e confermarla nella buca di conferma",
-    "ricevi_questa_email_di_attivazione"    =>  "Ricevi questa email perché è stato creato un account.",
+    "ricevi_questa_email_di_attivazione"    =>  "Ricevi questa email perché è stato creato un account sulla piattaforma convegni dell'OAM.",
     "per_attivare_il_tuo_account"   =>  "Per attivare il tuo account clicca sul link sottostante.",
     "attiva_account"    =>  "Attiva Account",
     "se_non_hai_richiesto_account"  =>  "Se non hai mai richiesto una account in piattaforma, ignora questa email.",
