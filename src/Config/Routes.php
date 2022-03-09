@@ -25,6 +25,7 @@ $routes->group('', ['namespace' => 'Myth\Auth\Controllers'], function ($routes) 
 
     //OTP SMS
     //sms_otp
+    $routes->get('sms_otp', 'AuthController::sendSMSOTPnosegment');
     $routes->get('sms_otp/(:segment)', 'AuthController::sendSMSOTP/$1');
     $routes->post('sms_otp/(:segment)', 'AuthController::verifySMSOTP/$1');
 
