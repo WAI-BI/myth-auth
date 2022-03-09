@@ -706,7 +706,7 @@ class AuthController extends Controller
 				}
 
 			} else {
-				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+				return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
 			}
 		} else {
             //prima di reinderizzare devo salvare il tentativo andato fallito
@@ -890,7 +890,7 @@ class AuthController extends Controller
 				}
 
 			} else {
-				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+				return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
 			}
 		} else {
             //devo tracciare il tentativo errato
@@ -1056,11 +1056,11 @@ class AuthController extends Controller
 						'config' => $this->config
 					]);
 				} else {
-					return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+					return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
 
 				}
 			} else {
-				return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+				return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
 
 			}
 	}
@@ -1091,7 +1091,7 @@ class AuthController extends Controller
 					'success'		=>	'1',
 				);
 				if ($AuthUserOtpAttempts->save($data_attempts)) {
-					return redirect()->route('login')->with('message', array(lang('Platone.otp_confermato')));
+					return redirect()->route('login')->with('message', lang('Platone.otp_confermato')));
 				} else {
 					return redirect()->route('two_step')->with('message_error', array(lang('Platone.impossibie_salvate_otp_attempts')));
 				}
@@ -1137,11 +1137,11 @@ class AuthController extends Controller
 
 
 		} else {
-			return redirect()->route('login')->with('message_error', array(lang('Platone.si_prega_di_autenticarsi')));
+			return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
 		}
 	}
 
     public function sendSMSOTPnosegment() {
-        return redirect()->route('login')->with('message_error', array(lang('Platone.si_prega_di_autenticarsi')));
+        return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
     }
 }
