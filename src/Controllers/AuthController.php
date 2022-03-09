@@ -1137,11 +1137,11 @@ class AuthController extends Controller
 
 
 		} else {
-			return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+			return redirect()->route('login')->with('message_error', array(lang('Platone.si_prega_di_autenticarsi')));
 		}
 	}
 
     public function sendSMSOTPnosegment() {
-        return redirect()->route('login')->with('message', array(lang('Platone.si_prega_di_autenticarsi')));
+        return redirect()->route('login')->with('message_error', array(lang('Platone.si_prega_di_autenticarsi')));
     }
 }
