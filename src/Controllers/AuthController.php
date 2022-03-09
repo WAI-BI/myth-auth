@@ -831,7 +831,7 @@ class AuthController extends Controller
         $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $utente->id)
         ->where("success", "0")->where("date >=", date("Y-m-d", time()))->first();
 
-        if (isset($fault['tot']) AND $fault['tot']>5) {
+        if (isset($fault['tot']) AND $fault['tot']>=5) {
             return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
         }
 
