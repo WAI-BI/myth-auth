@@ -1091,7 +1091,7 @@ class AuthController extends Controller
 					'success'		=>	'1',
 				);
 				if ($AuthUserOtpAttempts->save($data_attempts)) {
-					return redirect()->route('login')->with('message', lang('Platone.otp_confermato')));
+					return redirect()->route('login')->with('message', lang('Platone.otp_confermato'));
 				} else {
 					return redirect()->route('two_step')->with('message_error', array(lang('Platone.impossibie_salvate_otp_attempts')));
 				}
