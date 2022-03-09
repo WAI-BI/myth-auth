@@ -655,6 +655,17 @@ class AuthController extends Controller
 
 		$users = model(UserModel::class);
 		$otp = $this->request->getPost('otp', FILTER_SANITIZE_NUMBER_INT);
+        $utente = $users->where("username", $username)->first();
+        $soa = new AuthUserSmsOtpAttempts();
+        //conto i tentativi sbagliati dell'utente
+        if (isset($utente->id)) {
+            $fault = $soa->select("COUNT(id) AS tot")->where("success", "0")->where("user_id", $utente->id)->where("date >=", date("Y-m-d", time()))->first();
+            if ($fault['tot']>=5) {
+                return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_sms_otp'));
+            }
+        } else {
+            return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
+        }
 
 		$data  = $users->where("username", $username)->where("phone_hash", $otp)->first();
 
@@ -742,7 +753,6 @@ class AuthController extends Controller
                 return redirect()->back()->withInput()->with('errors', array(lang("Platone.error_during_otp_confirm", array($remain))));
             }
 
-
 		}
 	}
 
@@ -827,13 +837,18 @@ class AuthController extends Controller
 		//recupero prima il numero totale di tentativi già fatti
         $uua = new AuthUserUuidAttempts();
 
-        //conto i tentativi sbagliati dell'utente
-        $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $utente->id)
-        ->where("success", "0")->where("date >=", date("Y-m-d", time()))->first();
+        if (isset($utente->id)) {
+            //conto i tentativi sbagliati dell'utente
+            $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $utente->id)
+            ->where("success", "0")->where("date >=", date("Y-m-d", time()))->first();
 
-        if (isset($fault['tot']) AND $fault['tot']>=5) {
-            return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
+            if (isset($fault['tot']) AND $fault['tot']>=5) {
+                return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
+            }
+        } else {
+            return redirect()->route('login')->with('message', lang('Platone.si_prega_di_autenticarsi'));
         }
+
 
 		$data  = $agc->where("uuid", $uuid)->where("cod_fis", $utente->cod_fis)->first();
 
