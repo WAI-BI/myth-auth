@@ -824,8 +824,16 @@ class AuthController extends Controller
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 
-		//echo $uuid;
-		//exit;
+		//recupero prima il numero totale di tentativi già fatti
+        $uua = new AuthUserUuidAttempts();
+
+        //conto i tentativi sbagliati dell'utente
+        $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $user->id)
+        ->where("success", "0")->where("date >=", date("Y-m-d", time()))->first();
+
+        if (isset($fault['tot']) AND $fault['tot']>5) {
+            return redirect()->route('login')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_uuid'));
+        }
 
 		$data  = $agc->where("uuid", $uuid)->where("cod_fis", $utente->cod_fis)->first();
 
@@ -910,7 +918,9 @@ class AuthController extends Controller
             }
 
             //conto i tentativi sbagliati dell'utente
-            $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $user->id)->where("date >=", date("Y-m-d", time()))->first();
+            $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $user->id)
+            ->where("success", "0")
+            ->where("date >=", date("Y-m-d", time()))->first();
 
             $remain = 5-$fault['tot'];
 
