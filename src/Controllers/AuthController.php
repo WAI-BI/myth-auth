@@ -527,7 +527,7 @@ class AuthController extends Controller
 
 		$throttler = service('throttler');
 
-		if ($throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false)
+		if ($throttler->check(md5($this->request->getIPAddress()), 50, MINUTE) === false)
         {
 			return service('response')->setStatusCode(429)->setBody(lang('Auth.tooManyRequests', [$throttler->getTokentime()]));
         }
