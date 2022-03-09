@@ -828,7 +828,7 @@ class AuthController extends Controller
         $uua = new AuthUserUuidAttempts();
 
         //conto i tentativi sbagliati dell'utente
-        $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $user->id)
+        $fault = $uua->select("COUNT(id) AS tot")->where("user_id", $utente->id)
         ->where("success", "0")->where("date >=", date("Y-m-d", time()))->first();
 
         if (isset($fault['tot']) AND $fault['tot']>5) {
