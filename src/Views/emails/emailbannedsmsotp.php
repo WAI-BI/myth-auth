@@ -1,8 +1,9 @@
-<p><?=lang("Platone.ricevi_questa_email_perche_hai_superato_numero_massimo_tentativi_sms_otp")?></p>
+Gentile <?php echo $ana['nome'].' '.$ana['cognome'].', CF: '. $ana['cod_fis']; ?>
 
-<p><?=lang("Platone.ti_invitiamo_a_riprovare_tra_almeno_due_ore")?></p>
-
-<hr />
-
-<p><?=lang("Platone.se_non_ti_sei_autenticato_via_email")?>.</p>
-
+<p><?=lang("Platone.errorSendingemailOTP_parte_1")?></p>
+<br><br>
+<p><?=lang("Platone.cordiali_saluti")?></p>
+<br>
+<p><?=lang("Platone.errorSendingemailOTP_parte_2")?></p>
+<br>
+<p><?=lang("Platone.errorSendingemailOTP_parte_3")?></p>
