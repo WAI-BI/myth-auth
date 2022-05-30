@@ -20,7 +20,7 @@ return [
     // Activation
     'activationNoUser'          => 'Impossibile trovare un utente con questo codice di attivazione.',
     'activationSubject'         => 'Attiva il tuo account',
-    'activationSuccess'         => 'Conferma il tuo account cliccando sul link di attivazione nell\'email che ti abbiamo inviato all\'indirizzo che ci hai indicato entro due ore.',
+    'activationSuccess'         => 'Conferma entro due ore il tuo <i>account</i> cliccando sul <i>link</i> di attivazione nell\'<i>email</i> che ti abbiamo inviato all\'indirizzo che ci hai indicato.',
     'activationResend'          => 'Invia ancora il messaggio di attivazione.',
     'notActivated'              => 'Questo account utente non è stato ancora attivato.',
     'errorSendingActivation'    => 'Impossibile inviare il messaggio di attivazione a: {0}',

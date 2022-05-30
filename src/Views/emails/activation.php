@@ -6,5 +6,4 @@
 
 <hr />
 
-<p><?=lang("Platone.se_non_hai_richiesto_account")?>.</p>
-
+<p><?=lang("Platone.se_non_hai_richiesto_account")?></p>

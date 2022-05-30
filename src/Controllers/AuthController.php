@@ -1148,6 +1148,9 @@ class AuthController extends Controller
                         //devo banner l'utente e tornare alla login
                         $user->ban(lang('Platone.bannato_per_troppi_tentativi_errati_email_otp'));
                         $users->update($user_id, $user);
+
+						$activator = service('activator');
+                		$sent = $activator->sendEmailRetry($user);
                         //foro il logout dell'utente
                         return redirect()->route('logout')->with('error', lang('Platone.bannato_per_troppi_tentativi_errati_email_otp'));
                     } else {

@@ -2,6 +2,7 @@
 
 use Config\Email;
 use Myth\Auth\Entities\User;
+use App\Models\WebinarAnagrafe;
 
 /**
  * Class EmailActivator
@@ -98,10 +99,19 @@ class EmailActivator extends BaseActivator implements ActivatorInterface
 
         $settings = $this->getActivatorSettings();
 
+        $wa = new WebinarAnagrafe();
+        $check_wa = $wa->where("cod_fis", $user->cod_fis)->first();
+
+        if (!$check_wa) {
+            $this->error = lang('Platone.errorSendingemailOTPUserNotFound', [$user->email]);
+            return false;
+        }
+
         $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
               ->setTo($user->email)
               ->setSubject(lang('Platone.EmailBanSubjectSMSOTP'))
-              ->setMessage(view($this->config->views['EmailBannedSMSOTP']))
+            //   ->setMessage(view($this->config->views['EmailBannedSMSOTP'] ))
+              ->setMessage(view($this->config->views['EmailBannedSMSOTP'], ['ana' => $check_wa]))
               ->setMailType('html')
               ->send();
 
