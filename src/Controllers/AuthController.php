@@ -74,6 +74,8 @@ class AuthController extends Controller
 	public function attemptLogin()
 	{
 
+		helper('cookie');
+
 		if (!$this->googleCaptachStore()) {
 			return redirect()->route('login')->withInput()->with('error', lang('Platone.errore_google_captcha'));
 		}
@@ -118,6 +120,23 @@ class AuthController extends Controller
 			$redirectURL = base_url("/frontend");
 		}
 
+		// Aggancio qui la chiamata curl per recuperare il token sanctum da passare in header ai servizi
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->config->services_base_path . 'login');
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, 
+		http_build_query ([
+			'email' => $login,
+			'password' => $password
+		]));
+		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = json_decode(curl_exec($ch), TRUE);
+		curl_close ($ch);
+
+		set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
+
 		return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));
 	}
 
@@ -126,8 +145,11 @@ class AuthController extends Controller
 	 */
 	public function logout()
 	{
+		helper('cookie');
+
 		if ($this->auth->check())
 		{
+			delete_cookie('sanctum_token');
 			$this->auth->logout();
 		}
 
@@ -1057,6 +1079,7 @@ class AuthController extends Controller
 							if (!$sent) {
 								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
 							}
+						
 						} else {
 							//mando messaggio di errore e torno alla login
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));

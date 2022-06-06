@@ -4,6 +4,10 @@ use CodeIgniter\Config\BaseConfig;
 
 class Auth extends BaseConfig
 {
+
+	public $services_base_path = 'http://127.0.0.1:8000/api/';
+
+
 	/**
 	 * --------------------------------------------------------------------
 	 * Default User Group
@@ -168,7 +172,7 @@ class Auth extends BaseConfig
 	 *
 	 * @var bool
 	 */
-	public $allowOTPEmail = true;
+	public $allowOTPEmail = false;
 
 	/**
 	 * --------------------------------------------------------------------
