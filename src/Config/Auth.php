@@ -174,6 +174,17 @@ class Auth extends BaseConfig
 	 */
 	public $allowOTPEmail = false;
 
+    /**
+	 * --------------------------------------------------------------------
+	 * Allow reCaptcha
+	 * --------------------------------------------------------------------
+	 *
+	 * When enabled user login have google reCaptcha verification
+	 *
+	 * @var bool
+	 */
+	public $allowreCaptcha = false;
+
 	/**
 	 * --------------------------------------------------------------------
 	 * Require Confirmation Registration via Email

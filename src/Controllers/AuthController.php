@@ -76,7 +76,7 @@ class AuthController extends Controller
 
 		helper('cookie');
 
-		if (!$this->googleCaptachStore()) {
+		if ($this->config->allowreCaptcha && !$this->googleCaptachStore()) {
 			return redirect()->route('login')->withInput()->with('error', lang('Platone.errore_google_captcha'));
 		}
 
@@ -125,12 +125,12 @@ class AuthController extends Controller
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->config->services_base_path . 'login');
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, 
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
 		http_build_query ([
 			'email' => $login,
 			'password' => $password
 		]));
-		
+
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$result = json_decode(curl_exec($ch), TRUE);
 		curl_close ($ch);
@@ -192,7 +192,7 @@ class AuthController extends Controller
 			return redirect()->route('register')->withInput()->with('error', lang('Auth.registerDisabled'));
 		}
 
-		if (!$this->googleCaptachStore()) {
+		if ($this->config->allowreCaptcha && !$this->googleCaptachStore()) {
 			return redirect()->route('register')->withInput()->with('error', lang('Platone.errore_google_captcha'));
 
 		}
@@ -400,7 +400,7 @@ class AuthController extends Controller
 			return redirect()->route('login')->with('error', lang('Auth.forgotDisabled'));
 		}
 
-		if (!$this->googleCaptachStore()) {
+		if ($this->config->allowreCaptcha && !$this->googleCaptachStore()) {
 			return redirect()->route('forgot')->withInput()->with('error', lang('Platone.errore_google_captcha'));
 		}
 
@@ -1079,7 +1079,7 @@ class AuthController extends Controller
 							if (!$sent) {
 								return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_inviare_otp')));
 							}
-						
+
 						} else {
 							//mando messaggio di errore e torno alla login
 							return redirect()->route('login')->with('message_warning', array(lang('Platone.impossibile_salvare_otp_email')));
