@@ -123,7 +123,7 @@ class AuthController extends Controller
 		// Aggancio qui la chiamata curl per recuperare il token sanctum da passare in header ai servizi
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->config->services_base_path . 'login');
+		curl_setopt($ch, CURLOPT_URL, env('platone_service_url', '') . 'login');
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,
 		http_build_query ([
