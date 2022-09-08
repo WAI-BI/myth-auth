@@ -41,7 +41,7 @@ return [
 
     // Passwords
     // 'errorPasswordLength'       => 'La password deve contenere almeno {0, number} caratteri.',
-    'errorPasswordLength'       => '<ul>La password deve:<li>essere composta da un minimo di {0, number} caratteri;</li><li>deve contenere almeno una lettera maiuscola e una minuscola;</li><li>deve contenere almeno un numero;</li><li>deve contenere almeno un carattere speciale.</li></ul>',
+    'errorPasswordLength'       => 'La password deve essere composta da un minimo di {0, number} caratteri',
     'suggestPasswordLength'     => 'Una frase utilizzata come password - di lunghezza fino a 255 caratteri - la rende più sicura e facile da ricordare.',
     'errorPasswordCommon'       => 'Si consiglia di creare una password maggiormente complessa e meno comune',
     'suggestPasswordCommon'     => 'La password inserita è stata messa a confronto con oltre 65.000 password comuni, password violate e password interessate a leaks e hacks.',

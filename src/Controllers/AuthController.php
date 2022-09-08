@@ -452,14 +452,35 @@ class AuthController extends Controller
 
 		$token = $this->request->getGet('token');
 
+		// $users = model('UserModel');
+		// $user = $users->where( 'reset_hash', $token )->first();
+
+		// return $this->_render($this->config->views['reset'], [
+		// 	'config' => $this->config,
+		// 	'token'  => $token,
+		// 	'email'  => (isset($user->email) && !empty($user->email) ) ? $user->email : '',
+		// ]);
+
 		$users = model('UserModel');
 		$user = $users->where( 'reset_hash', $token )->first();
+		
+		if (isset($user) && !empty($user)) {
+			return $this->_render($this->config->views['reset'], [
+				'config' => $this->config,
+				'token'  => $token,
+				'email'  => (isset($user->email) && !empty($user->email) ) ? $user->email : '',
+			]);
+		} else {
+			// echo 'Utente non trovato richiedere nuovo reset';
+			return 
+			redirect()
+				->to(base_url('index.php/reset-password'))
+				->withInput()->with(
+					'errors', 
+					['Richiesta reset password scaduta, <a href="' . base_url('index.php/forgot') . '">clicca qui</a> per richiedere un nuovo reset o <a href="' . base_url('index.php/login') . '">qui</a> per effettuare il login.']
+				);
 
-		return $this->_render($this->config->views['reset'], [
-			'config' => $this->config,
-			'token'  => $token,
-			'email'  => (isset($user->email) && !empty($user->email) ) ? $user->email : '',
-		]);
+		}
 	}
 
 	/**
@@ -494,10 +515,33 @@ class AuthController extends Controller
 		);
 
 		$rules = [
-			'token'		=> 'required',
-			'email'		=> 'required|valid_email',
-			'password'	 => ['label' => lang('Platone.password'),'rules' => 'required|strong_password|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{12,30}$/]'],
-			'pass_confirm' => ['label' => lang('Platone.pass_confirm'),'rules' => 'required|matches[password]'],
+			'token'		=> [
+				'rules' => 'required',
+				'errors' => [
+					'required'	=>	'Il campo Token è obbligatorio',
+				]
+			],
+			'email'		=> [
+				'rules'=>'required|valid_email',
+				'errors' => [
+					'required'	=>	'Il campo Email è obbligatorio',
+					'valid_email' => 'Non hai inserito una email valida'
+				]
+			],
+			'password'	 => [
+				'rules' =>'required|strong_password',
+				'errors' => [
+					'required'	=>	'Il campo Password è obbligatorio',
+					'strong_password' => 'La Password inserita non è abbastanza efficace.'
+				]
+			],
+			'pass_confirm' => 	[
+				'rules' => 'required|matches[password]',
+				'errors' => [
+					'required'	=>	'Il campo Conferma Password è obbligatorio',
+					'matches' => 'Il campo Password e il campo Conferma Password non corrispondono'
+				]
+			],
 		];
 
 		if (! $this->validate($rules))
