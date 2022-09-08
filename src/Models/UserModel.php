@@ -25,7 +25,7 @@ class UserModel extends Model
         'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[255]|is_unique[users.username,id,{id}]',
         'password_hash' => 'required',
         'cod_fis'       =>  'required',
-        'phone'         =>  'required|alpha_numeric_punct',
+        // 'phone'         =>  'required|alpha_numeric_punct',
         'last_name'       =>  'required|min_length[3]',
         'first_name'         =>  'required|min_length[3]',
     ];
