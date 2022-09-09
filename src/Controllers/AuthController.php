@@ -14,6 +14,8 @@ use Myth\Auth\Models\AuthUserOtpAttempts;
 use Myth\Auth\Models\AuthUserSmsOtpAttempts;
 use Myth\Auth\Models\AuthUserUuidAttempts;
 
+use Config\Services;
+
 use CodiceFiscale;
 
 class AuthController extends Controller
@@ -113,31 +115,48 @@ class AuthController extends Controller
 			return redirect()->to(route_to('reset-password') .'?token='. $this->auth->user()->reset_hash)->withCookies();
 		}
 
-		$redirectURL = session('redirect_url') ?? base_url('/frontend');
-		unset($_SESSION['redirect_url']);
+		$authorization = service('authorization');
+		$authenticate = Services::authentication();
+		
+		if ($authorization->inGroup('admin', $authenticate->id()) || $authorization->inGroup('super_admin', $authenticate->id())) {
 
-		if ($redirectURL == base_url()."/") {
-			$redirectURL = base_url("/frontend");
+			// Is the user being forced to reset their password?
+			if ($this->auth->user()->force_pass_reset === true)
+			{
+				return redirect()->to(route_to('reset-password') .'?token='. $this->auth->user()->reset_hash)->withCookies();
+			}
+	
+			$redirectURL = session('redirect_url') ?? base_url('/frontend');
+			unset($_SESSION['redirect_url']);
+	
+			if ($redirectURL == base_url()."/") {
+				$redirectURL = base_url("/frontend");
+			}
+	
+			// Aggancio qui la chiamata curl per recuperare il token sanctum da passare in header ai servizi
+	
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, env('platone_service_url', '') . 'login');
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,
+			http_build_query ([
+				'email' => $login,
+				'password' => $password
+			]));
+	
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$result = json_decode(curl_exec($ch), TRUE);
+			curl_close ($ch);
+	
+			set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
+	
+			return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));	
+
+		
+		} else {			
+			$this->auth->logout();		
+			return redirect()->route('login')->withInput()->with('error', 'Solo gli amministratori possono accedere alla dashboard amministrativa');
 		}
-
-		// Aggancio qui la chiamata curl per recuperare il token sanctum da passare in header ai servizi
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, env('platone_service_url', '') . 'login');
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,
-		http_build_query ([
-			'email' => $login,
-			'password' => $password
-		]));
-
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = json_decode(curl_exec($ch), TRUE);
-		curl_close ($ch);
-
-		set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
-
-		return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));
 	}
 
 	/**
