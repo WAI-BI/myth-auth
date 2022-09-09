@@ -472,13 +472,14 @@ class AuthController extends Controller
 			]);
 		} else {
 			// echo 'Utente non trovato richiedere nuovo reset';
-			return 
-			redirect()
-				->to(base_url('index.php/reset-password'))
-				->withInput()->with(
-					'errors', 
-					['Richiesta reset password scaduta, <a href="' . base_url('index.php/forgot') . '">clicca qui</a> per richiedere un nuovo reset o <a href="' . base_url('index.php/login') . '">qui</a> per effettuare il login.']
-				);
+			return redirect()->route('login');
+			// return 
+			// redirect()
+			// 	->to(base_url('index.php/reset-password'))
+			// 	->withInput()->with(
+			// 		'errors', 
+			// 		['Richiesta reset password scaduta, <a href="' . base_url('index.php/forgot') . '">clicca qui</a> per richiedere un nuovo reset o <a href="' . base_url('index.php/login') . '">qui</a> per effettuare il login.']
+			// 	);
 
 		}
 	}
