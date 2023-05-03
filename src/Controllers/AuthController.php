@@ -129,9 +129,9 @@ class AuthController extends Controller
 			$redirectURL = session('redirect_url') ?? base_url('/frontend');
 			unset($_SESSION['redirect_url']);
 	
-			if ($redirectURL == base_url()."/") {
-				$redirectURL = base_url("/frontend");
-			}
+			if (($redirectURL == base_url()."/index.php/") OR ($redirectURL == base_url()."/index.php")) {
+                $redirectURL = base_url("/frontend");
+            }
 	
 			// Aggancio qui la chiamata curl per recuperare il token sanctum da passare in header ai servizi
 	
