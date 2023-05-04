@@ -55,6 +55,22 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
             
             return false;
         }
+
+        if (!preg_match('/[A-Z]/', $password)) {
+            $this->error      = "La password deve contenere almento un carattere maiuscolo";
+            $this->suggestion = "La password deve contenere almento un carattere maiuscolo";
+            
+            return false;
+        }
+
+        if (!(str_contains($password, '#') || str_contains($password, '$') || str_contains($password, '@') || str_contains($password, '!') || str_contains($password, '%') || str_contains($password, '&'))) {
+        
+            $this->error      = "La password deve contenere almento un carattere speciale";
+            $this->suggestion = "La password deve contenere almento un carattere speciale";
+            
+            return false;
+        
+        }
         
         return true;
     }
