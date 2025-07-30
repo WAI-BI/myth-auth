@@ -147,6 +147,15 @@ class AuthController extends Controller
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			$result = json_decode(curl_exec($ch), TRUE);
 			curl_close ($ch);
+
+			// print_r($result);
+			// exit;
+
+			if (empty($result) OR !$result OR isset($result['message'])) {
+				//genero un fatal error in codeigniter 4
+				throw new \Error($result['message']);
+
+			}
 	
 			set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
 	
