@@ -2,7 +2,7 @@
 
 namespace Myth\Auth\Authentication\Passwords;
 
-use CodeIgniter\Entity;
+use CodeIgniter\Entity\Entity;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
 use Myth\Auth\Exceptions\AuthException;
 

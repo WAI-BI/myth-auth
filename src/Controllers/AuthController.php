@@ -160,8 +160,8 @@ class AuthController extends Controller
 	
 			set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
 	
-			echo $redirectURL;
-			exit;
+			// echo $redirectURL;
+			// exit;
 
 			return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));	
 

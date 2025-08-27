@@ -162,7 +162,7 @@ class Publish extends BaseCommand
         $content = file_get_contents($path);
         $content = $this->replaceNamespace($content, 'Myth\Auth\Entities', 'Entities');
 
-        $content = str_replace("use CodeIgniter\Entity;\n", '', $content);
+        $content = str_replace("use CodeIgniter\Entity\Entity;\n", '', $content);
         $content = str_replace("use Myth\Auth\Authorization\GroupModel;\n", '', $content);
         $content = str_replace("use Myth\Auth\Authorization\PermissionModel;\n", '', $content);
 

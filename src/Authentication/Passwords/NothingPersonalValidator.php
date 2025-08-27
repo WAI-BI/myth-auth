@@ -1,6 +1,6 @@
 <?php namespace Myth\Auth\Authentication\Passwords;
 
-use CodeIgniter\Entity;
+use CodeIgniter\Entity\Entity;
 
 /**
  * Class NothingPersonalValidator
@@ -32,7 +32,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
      *
      * @return boolean
      */
-    public function check(string $password, Entity $user = null): bool
+    public function check(string $password, ?Entity $user = null): bool
     {
         $password = \strtolower($password);
 

@@ -1,6 +1,6 @@
 <?php namespace Myth\Auth\Authentication\Passwords;
 
-use CodeIgniter\Entity;
+use CodeIgniter\Entity\Entity;
 use Myth\Auth\Exceptions\AuthException;
 
 /**
@@ -39,7 +39,7 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function check(string $password, Entity $user=null): bool
+    public function check(string $password, $user=null): bool
     {
         if (empty($this->config->minimumPasswordLength))
         {
