@@ -59,7 +59,8 @@ class AuthController extends Controller
 		{
 			$redirectURL = session('redirect_url') ?? base_url('/frontend');
 			unset($_SESSION['redirect_url']);
-
+			// echo $redirectURL;
+			// exit;
 			return redirect()->to($redirectURL);
 		}
 
@@ -128,8 +129,8 @@ class AuthController extends Controller
 	
 			$redirectURL = session('redirect_url') ?? base_url('/frontend');
 			unset($_SESSION['redirect_url']);
-	
-			if (($redirectURL == base_url()."/index.php/") OR ($redirectURL == base_url()."/index.php")) {
+
+			if (($redirectURL == base_url()."/index.php/") OR ($redirectURL == base_url()."/index.php") OR ($redirectURL == base_url()."index.php/")) {
                 $redirectURL = base_url("/frontend");
             }
 	
@@ -159,6 +160,9 @@ class AuthController extends Controller
 	
 			set_cookie([ 'name' => 'sanctum_token', 'value' => $result['data']['token'], 'expire' => time() + 1000, 'httponly' => false ]);
 	
+			echo $redirectURL;
+			exit;
+
 			return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));	
 
 		
