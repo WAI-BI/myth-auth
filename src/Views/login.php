@@ -11,7 +11,7 @@
 
 					<?= view('Myth\Auth\Views\_message_block') ?>
 
-					<form action="<?= route_to('login') ?>" method="post">
+					<form action="<?php echo base_url(); ?><?= route_to(base_url("login")) ?>" method="post">
 						<?= csrf_field() ?>
 
 <?php if ($config->validFields === ['email']): ?>
@@ -42,14 +42,14 @@
 							</div>
 						</div>
 
-<?php if ($config->allowRemembering): ?>
+						<?php if ($config->allowRemembering): ?>
 						<div class="form-check">
 							<label class="form-check-label">
 								<input type="checkbox" name="remember" class="form-check-input" <?php if(old('remember')) : ?> checked <?php endif ?>>
 								<?=lang('Auth.rememberMe')?>
 							</label>
 						</div>
-<?php endif; ?>
+						<?php endif; ?>
 
 						<br>
 
@@ -59,10 +59,10 @@
 					<hr>
 
 <?php if ($config->allowRegistration) : ?>
-					<p><a href="<?= route_to('register') ?>"><?=lang('Auth.needAnAccount')?></a></p>
+					<p><a href="<?php echo base_url(); ?><?= route_to('register') ?>"><?=lang('Auth.needAnAccount')?></a></p>
 <?php endif; ?>
 <?php if ($config->activeResetter): ?>
-					<p><a href="<?= route_to('forgot') ?>"><?=lang('Auth.forgotYourPassword')?></a></p>
+					<p><a href="<?php echo base_url(); ?><?= route_to('forgot') ?>"><?=lang('Auth.forgotYourPassword')?></a></p>
 <?php endif; ?>
 				</div>
 			</div>

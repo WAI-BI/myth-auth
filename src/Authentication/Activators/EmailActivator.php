@@ -1,8 +1,8 @@
 <?php namespace Myth\Auth\Authentication\Activators;
 
 use Config\Email;
-use Myth\Auth\Entities\User;
-use App\Models\WebinarAnagrafe;
+use CodeIgniter\Entity\Entity;
+use CodeIgniter\Config\Services;
 
 /**
  * Class EmailActivator
@@ -14,26 +14,45 @@ use App\Models\WebinarAnagrafe;
 class EmailActivator extends BaseActivator implements ActivatorInterface
 {
     /**
+     * @var string
+     */
+    protected $error;
+
+    /**
      * Sends an activation email
      *
      * @param User $user
      *
-     * @return bool
+     * @return mixed
      */
-    public function send(User $user = null): bool
+    public function send(Entity $user = null): bool
     {
-
-        $email = service('email');
+        $email = Services::email();
         $config = new Email();
 
         $settings = $this->getActivatorSettings();
 
-        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
-              ->setTo($user->email)
-              ->setSubject(lang('Auth.activationSubject'))
-              ->setMessage(view($this->config->views['emailActivation'], ['hash' => $user->reset_hash]))
-              ->setMailType('html')
-              ->send();
+        //Se è stato già stata configurata la libreria carico la configurazione email dal database
+        $email_config = new \App\Libraries\EmailConfiguration; 
+        
+        if ($email_config->initialized()) {
+            
+            $sent = $email->setFrom($email_config->get_configuration()['fromEmail'], $email_config->get_configuration()['fromName'])
+                ->setTo($user->email)
+                ->setSubject(lang('Auth.activationSubject'))
+                ->setMessage(view($this->config->views['emailActivation'], ['hash' => $user->reset_hash]))
+                ->setMailType('html')
+                ->send();
+        } else {
+            $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
+                ->setTo($user->email)
+                ->setSubject(lang('Auth.activationSubject'))
+                ->setMessage(view($this->config->views['emailActivation'], ['hash' => $user->reset_hash]))
+                ->setMailType('html')
+                ->send();
+        }
+
+        
 
         if (! $sent)
         {
@@ -45,109 +64,13 @@ class EmailActivator extends BaseActivator implements ActivatorInterface
     }
 
     /**
-     * Sends an activation with SMS on phone
+     * Returns the error string that should be displayed to the user.
      *
-     * @param User $user
-     *
-     * @return bool
+     * @return string
      */
-    public function sendOTP(User $user = null): bool
+    public function error(): string
     {
-
-        /**
-         * Può essere necessario fare un controllo approfondito sulla formazione del numero di cellulare
-         * che in fase di inserimento non deve contenere il prefisso.
-         */
-
-        $sms = new \App\Libraries\Smsapi();
-
-        $message  = lang("Platone.usa_il_codice_per_confermare_telefono").$user->phone_hash;
-        $sms->SendSms($message, "39 ".$user->phone);
-
-        return true;
+        return $this->error ?? '';
     }
 
-    public function sendEmailOTP(User $user = null): bool
-    {
-
-        $email = service('email');
-        $config = new Email();
-
-        $settings = $this->getActivatorSettings();
-
-        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
-              ->setTo($user->email)
-              ->setSubject(lang('Platone.EmailOtpSubject'))
-              ->setMessage(view($this->config->views['emailOTP'], ['hash' => $user->phone_hash]))
-              ->setMailType('html')
-              ->send();
-
-        if (! $sent)
-        {
-
-            $this->error = lang('Platone.errorSendingemailOTP', [$user->email]);
-            return false;
-        }
-
-        return true;
-    }
-
-    public function sendEmailRetry(User $user = null): bool
-    {
-        $email = service('email');
-        $config = new Email();
-
-        $settings = $this->getActivatorSettings();
-
-        $wa = new WebinarAnagrafe();
-        $check_wa = $wa->where("cod_fis", $user->cod_fis)->first();
-
-        if (!$check_wa) {
-            $this->error = lang('Platone.errorSendingemailOTPUserNotFound', [$user->email]);
-            return false;
-        }
-
-        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
-              ->setTo($user->email)
-              ->setSubject(lang('Platone.EmailBanSubjectSMSOTP'))
-            //   ->setMessage(view($this->config->views['EmailBannedSMSOTP'] ))
-              ->setMessage(view($this->config->views['EmailBannedSMSOTP'], ['ana' => $check_wa]))
-              ->setMailType('html')
-              ->send();
-
-        if (! $sent)
-        {
-
-            $this->error = lang('Platone.errorSendingemailOTP', [$user->email]);
-            return false;
-        }
-
-        return true;
-
-    }
-
-    public function sendEmailRetryUuid(User $user = null): bool
-    {
-        $email = service('email');
-        $config = new Email();
-
-        $settings = $this->getActivatorSettings();
-
-        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
-              ->setTo($user->email)
-              ->setSubject(lang('Platone.EmailBanSubjectUuid'))
-              ->setMessage(view($this->config->views['EmailBannedUuid']))
-              ->setMailType('html')
-              ->send();
-
-        if (! $sent)
-        {
-
-            $this->error = lang('Platone.errorSendingemailUuid', [$user->email]);
-            return false;
-        }
-
-        return true;
-
-    }
 }

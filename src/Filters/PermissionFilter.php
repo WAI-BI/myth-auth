@@ -1,5 +1,6 @@
 <?php namespace Myth\Auth\Filters;
 
+use Config\Services;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
@@ -17,7 +18,7 @@ class PermissionFilter implements FilterInterface
 	 * sent back to the client, allowing for error pages,
 	 * redirects, etc.
 	 *
-	 * @param RequestInterface $request
+	 * @param \CodeIgniter\HTTP\RequestInterface $request
 	 * @param array|null                         $params
 	 *
 	 * @return mixed
@@ -34,7 +35,7 @@ class PermissionFilter implements FilterInterface
 			return;
 		}
 
-		$authenticate = service('authentication');
+		$authenticate = Services::authentication();
 
 		// if no user is logged in then send to the login form
 		if (! $authenticate->check())
@@ -43,7 +44,7 @@ class PermissionFilter implements FilterInterface
 			return redirect('login');
 		}
 
-		$authorize = service('authorization');
+		$authorize = Services::authorization();
 		$result = true;
 
 		// Check each requested permission
@@ -74,8 +75,8 @@ class PermissionFilter implements FilterInterface
 	 * to stop execution of other after filters, short of
 	 * throwing an Exception or Error.
 	 *
-	 * @param RequestInterface  $request
-	 * @param ResponseInterface $response
+	 * @param \CodeIgniter\HTTP\RequestInterface  $request
+	 * @param \CodeIgniter\HTTP\ResponseInterface $response
 	 * @param array|null                          $arguments
 	 *
 	 * @return void

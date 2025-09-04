@@ -65,13 +65,6 @@ class Publish extends BaseCommand
      */
     protected $viewsPublished = false;
 
-    /**
-     * Whether the Entity were published for local use.
-     *
-     * @var bool
-     */
-    protected $entityPublished = false;
-
     //--------------------------------------------------------------------
 
     /**
@@ -89,17 +82,16 @@ class Publish extends BaseCommand
             $this->publishMigration();
         }
 
-        // Entities
-        if (CLI::prompt('Publish Entities?', ['y', 'n']) == 'y')
-        {
-            $this->publishEntities();
-            $this->entityPublished = true;
-        }
-
         // Models
         if (CLI::prompt('Publish Models?', ['y', 'n']) == 'y')
         {
             $this->publishModels();
+        }
+
+        // Entities
+        if (CLI::prompt('Publish Entities?', ['y', 'n']) == 'y')
+        {
+            $this->publishEntities();
         }
 
         // Controller
@@ -145,12 +137,6 @@ class Publish extends BaseCommand
             $content = file_get_contents($path);
             $content = $this->replaceNamespace($content, 'Myth\Auth\Models', 'Models');
 
-            // Are we also Have we also published the Entity ?
-            if ($model === 'UserModel' && $this->entityPublished)
-            {
-                $content = str_replace('User::class;', "'App\Entities\User';", $content);
-            }
-
             $this->writeFile("Models/{$model}.php", $content);
         }
     }
@@ -161,12 +147,6 @@ class Publish extends BaseCommand
 
         $content = file_get_contents($path);
         $content = $this->replaceNamespace($content, 'Myth\Auth\Entities', 'Entities');
-
-        $content = str_replace("use CodeIgniter\Entity\Entity;\n", '', $content);
-        $content = str_replace("use Myth\Auth\Authorization\GroupModel;\n", '', $content);
-        $content = str_replace("use Myth\Auth\Authorization\PermissionModel;\n", '', $content);
-
-        $content = str_replace('extends Entity', "extends \Myth\Auth\Entities\User", $content);
 
         $this->writeFile("Entities/User.php", $content);
     }
@@ -213,7 +193,7 @@ class Publish extends BaseCommand
 		$namespace = defined('APP_NAMESPACE') ? APP_NAMESPACE : 'App';
 
         $content = file_get_contents($path);
-        $content = str_replace('Myth\Auth\Views', $namespace.'\Views\Auth', $content);
+        $content = str_replace('Myth\Auth\Views', $namespace.'\Auth', $content);
 
         $this->writeFile("Views/Auth/{$prefix}{$view}", $content);
     }
@@ -261,7 +241,7 @@ class Publish extends BaseCommand
         if ($this->viewsPublished)
         {
             $namespace = defined('APP_NAMESPACE') ? APP_NAMESPACE : 'App';
-            $content = str_replace('Myth\Auth\Views', $namespace . '\Views\Auth', $content);
+            $content = str_replace('Myth\Auth\Views', $namespace . '\Views', $content);
         }
 
         $this->writeFile("Config/Auth.php", $content);

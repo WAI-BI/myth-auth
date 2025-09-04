@@ -2,6 +2,7 @@
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Config\Services;
 
 class CreateGroup extends BaseCommand
 {
@@ -17,7 +18,8 @@ class CreateGroup extends BaseCommand
 
 	public function run(array $params = [])
     {
-		$auth = service('authorization');
+		$db   = db_connect();
+		$auth = Services::authorization();
 
 		// consume or prompt for group name
 		$name = array_shift($params);

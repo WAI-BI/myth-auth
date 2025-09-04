@@ -2,10 +2,7 @@
 
 use CodeIgniter\Model;
 use CodeIgniter\Events\Events;
-use Myth\Auth\Authorization\GroupModel;
-use Myth\Auth\Authorization\PermissionModel;
-use Myth\Auth\Entities\User;
-use Myth\Auth\Models\UserModel;
+use Config\Services;
 
 class FlatAuthorization implements AuthorizeInterface
 {
@@ -15,37 +12,22 @@ class FlatAuthorization implements AuthorizeInterface
 	protected $error;
 
 	/**
-	 * The group model to use. Usually the class noted
-	 * below (or an extension thereof) but can be any
-	 * compatible CodeIgniter Model.
-	 *
-	 * @var GroupModel
+	 * @var Model
 	 */
 	protected $groupModel;
 
 	/**
-	 * The group model to use. Usually the class noted
-	 * below (or an extension thereof) but can be any
-	 * compatible CodeIgniter Model.
-	 *
-	 * @var PermissionModel
+	 * @var Model
 	 */
 	protected $permissionModel;
 
 	/**
-	 * The group model to use. Usually the class noted
-	 * below (or an extension thereof) but can be any
-	 * compatible CodeIgniter Model.
-	 *
-	 * @var UserModel
+	 * @var Model
 	 */
 	protected $userModel = null;
 
 	/**
 	 * Stores the models.
-	 *
-	 * @param GroupModel $groupModel
-	 * @param PermissionModel $permissionModel
 	 *
 	 * @return array|string|null
 	 */
@@ -69,7 +51,7 @@ class FlatAuthorization implements AuthorizeInterface
 	 * Allows the consuming application to pass in a reference to the
 	 * model that should be used.
 	 *
-	 * @param UserModel $model
+	 * @param Model $model
 	 *
 	 * @return mixed
 	 */
@@ -98,17 +80,17 @@ class FlatAuthorization implements AuthorizeInterface
 	 */
 	public function inGroup($groups, int $userId)
 	{
-		if ($userId === 0)
-		{
-			return false;
-		}
-
 		if (! is_array($groups))
 		{
 			$groups = [$groups];
 		}
 
-		$userGroups = $this->groupModel->getGroupsForUser((int) $userId);
+		if (empty($userId))
+		{
+			return null;
+		}
+
+		$userGroups = $this->groupModel->getGroupsForUser((int)$userId);
 
 		if (empty($userGroups))
 		{
@@ -142,14 +124,13 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Checks a user's groups to see if they have the specified permission.
 	 *
-	 * @param int|string $permission Permission ID or name
+	 * @param int|string $permission
 	 * @param int $userId
 	 *
 	 * @return mixed
 	 */
 	public function hasPermission($permission, int $userId)
 	{
-		// @phpstan-ignore-next-line
 		if (empty($permission) || (! is_string($permission) && ! is_numeric($permission)))
 		{
 			return null;
@@ -184,7 +165,7 @@ class FlatAuthorization implements AuthorizeInterface
 	 * @param int $userid
 	 * @param mixed $group Either ID or name, fails on anything else
 	 *
-	 * @return bool|null
+	 * @return bool
 	 */
 	public function addUserToGroup(int $userid, $group)
 	{
@@ -211,7 +192,7 @@ class FlatAuthorization implements AuthorizeInterface
 			return null;
 		}
 
-		if (! $this->groupModel->addUserToGroup($userid, (int) $groupId))
+		if (! $this->groupModel->addUserToGroup($userid, (int)$groupId))
 		{
 			$this->error = $this->groupModel->errors();
 
@@ -347,7 +328,7 @@ class FlatAuthorization implements AuthorizeInterface
 	 * @param int|string $permission
 	 * @param int		$userId
 	 *
-	 * @return bool|null
+	 * @return int|bool
 	 */
 	public function addPermissionToUser($permission, int $userId)
 	{
@@ -371,7 +352,6 @@ class FlatAuthorization implements AuthorizeInterface
 			return false;
 		}
 
-		/** @var User $user */
 		$permissions = $user->getPermissions();
 
 		if (! in_array($permissionId, $permissions))
@@ -389,7 +369,7 @@ class FlatAuthorization implements AuthorizeInterface
 	 * that have been assigned with addPermissionToUser, not to permissions
 	 * inherited based on groups they belong to.
 	 *
-	 * @param int|string $permission
+	 * @param int/string $permission
 	 * @param int $userId
 	 *
 	 * @return bool|mixed|null
@@ -421,8 +401,8 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Checks to see if a user has private permission assigned to it.
 	 *
-	 * @param int|string $userId
-	 * @param int|string $permission
+	 * @param $userId
+	 * @param $permission
 	 *
 	 * @return bool|null
 	 */
@@ -450,7 +430,7 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Grabs the details about a single group.
 	 *
-	 * @param int|string $group
+	 * @param $group
 	 *
 	 * @return object|null
 	 */
@@ -458,7 +438,7 @@ class FlatAuthorization implements AuthorizeInterface
 	{
 		if (is_numeric($group))
 		{
-			return $this->groupModel->find((int) $group);
+			return $this->groupModel->find((int)$group);
 		}
 
 		return $this->groupModel->where('name', $group)->first();
@@ -478,7 +458,7 @@ class FlatAuthorization implements AuthorizeInterface
 
 
 	/**
-	 * @param string $name
+	 * @param		$name
 	 * @param string $description
 	 *
 	 * @return mixed
@@ -490,7 +470,7 @@ class FlatAuthorization implements AuthorizeInterface
 			'description' => $description,
 		];
 
-		$validation = service('validation', null, false);
+		$validation = Services::validation(null, false);
 		$validation->setRules([
 			'name'		=> 'required|max_length[255]|is_unique[auth_groups.name]',
 			'description' => 'max_length[255]',
@@ -536,8 +516,8 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Updates a single group's information.
 	 *
-	 * @param int $id
-	 * @param string $name
+	 * @param		$id
+	 * @param		$name
 	 * @param string $description
 	 *
 	 * @return mixed
@@ -608,7 +588,7 @@ class FlatAuthorization implements AuthorizeInterface
 			return $this->permissionModel->find((int)$permission);
 		}
 
-		return $this->permissionModel->like('name', $permission, 'none', null, true)->first();
+		return $this->permissionModel->where('LOWER(name)', strtolower($permission))->first();
 	}
 
 	/**
@@ -624,7 +604,7 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Creates a single permission.
 	 *
-	 * @param string $name
+	 * @param		$name
 	 * @param string $description
 	 *
 	 * @return mixed
@@ -636,7 +616,7 @@ class FlatAuthorization implements AuthorizeInterface
 			'description' => $description,
 		];
 
-		$validation = service('validation', null, false);
+		$validation = Services::validation(null, false);
 		$validation->setRules([
 			'name'		=> 'required|max_length[255]|is_unique[auth_permissions.name]',
 			'description' => 'max_length[255]',
@@ -685,7 +665,7 @@ class FlatAuthorization implements AuthorizeInterface
 	/**
 	 * Updates the details for a single permission.
 	 *
-	 * @param int $id
+	 * @param int	$id
 	 * @param string $name
 	 * @param string $description
 	 *
@@ -718,14 +698,14 @@ class FlatAuthorization implements AuthorizeInterface
 	 *
 	 * @param int|string $permission
 	 *
-	 * @return int|false
+	 * @return int|null
 	 */
 	protected function getPermissionID($permission)
 	{
 		// If it's a number, we're done here.
 		if (is_numeric($permission))
 		{
-			return (int) $permission;
+			return (int)$permission;
 		}
 
 		// Otherwise, pull it from the database.
@@ -738,7 +718,7 @@ class FlatAuthorization implements AuthorizeInterface
 			return false;
 		}
 
-		return (int) $p->id;
+		return (int)$p->id;
 	}
 
 	/**
@@ -759,27 +739,6 @@ class FlatAuthorization implements AuthorizeInterface
 		{
 			$g = $this->groupModel->where('name', $group)->first();
 			return $this->groupModel->getPermissionsForGroup($g->id);
-		}
-	}
-
-	/**
-	 * Returns an array of all users in a group
-	 * The group can be either the ID or the name of the group.
-	 *
-	 * @param int|string $group
-	 *
-	 * @return mixed
-	 */
-	public function usersInGroup($group)
-	{
-		if (is_numeric($group))
-		{
-			return $this->groupModel->getUsersForGroup($group);
-		}
-		else
-		{
-			$g = $this->groupModel->where('name', $group)->first();
-			return $this->groupModel->getUsersForGroup($g->id);
 		}
 	}
 

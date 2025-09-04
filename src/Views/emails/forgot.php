@@ -1,12 +1,14 @@
-<p><?=lang("Platone.ricevuta_richiesta_modifica_password")?></p>
+<p>
+    Gentile utente,
+</p>
 
-<p><?=lang("Platone.istruzioni_per_completare_il_reset")?></p>
+<p>
+    abbiamo ricevuto una richiesta di recupero della password per poter accedere alla piattaforma di Formazione per i corsi Colf, Badanti e Baby-sitter.
+</p>
 
-<p><?=lang("Platone.visita_la")?> <a href="<?= base_url('reset-password') . '?token=' . $hash ?>"><?=lang("Platone.pagina_di_reset")?></a>.</p>
-
-<!-- <p><?=lang("Platone.scegli_la_nuova_password_e_confermala")?></p> -->
+<p>Utilizza questo <a href="<?= site_url('reset-password') . '?token=' . $hash ?>">link</a> per procedere al ripristino della tua password.</p>
+<small><strong>Questo link può essere utilizzato una sola volta.</strong></small>
 
 <br>
 
-<hr />
-<p><?=lang("Platone.se_non_hai_richiesto_reset")?>.</p>
+<p>Nel caso non avessi richiesto alcun aggiornamento ti chiediamo di ignorare questa email.</p>

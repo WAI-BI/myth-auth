@@ -28,52 +28,50 @@ class GroupModel extends Model
     /**
      * Adds a single user to a single group.
      *
-     * @param int $userId
-     * @param int $groupId
+     * @param $userId
+     * @param $groupId
      *
-     * @return bool
+     * @return object
      */
     public function addUserToGroup(int $userId, int $groupId)
-    {    
-        cache()->delete("{$groupId}_users");
+    {
         cache()->delete("{$userId}_groups");
         cache()->delete("{$userId}_permissions");
 
         $data = [
-            'user_id'  => (int) $userId,
-            'group_id' => (int) $groupId
+            'user_id'   => (int)$userId,
+            'group_id'  => (int)$groupId
         ];
 
-        return (bool) $this->db->table('auth_groups_users')->insert($data);
+        return $this->db->table('auth_groups_users')->insert($data);
     }
 
     /**
      * Removes a single user from a single group.
      *
-     * @param int $userId
-     * @param int|string $groupId
+     * @param $userId
+     * @param $groupId
      *
      * @return bool
      */
     public function removeUserFromGroup(int $userId, $groupId)
     {
-        cache()->delete("{$groupId}_users");
         cache()->delete("{$userId}_groups");
         cache()->delete("{$userId}_permissions");
 
         return $this->db->table('auth_groups_users')
             ->where([
-                'user_id'  => $userId,
-                'group_id' => (int) $groupId
+                'user_id' => (int)$userId,
+                'group_id' => (int)$groupId
             ])->delete();
     }
 
     /**
      * Removes a single user from all groups.
      *
-     * @param int $userId
+     * @param $userId
      *
-     * @return bool
+     * @return mixed
      */
     public function removeUserFromAllGroups(int $userId)
     {
@@ -88,13 +86,13 @@ class GroupModel extends Model
     /**
      * Returns an array of all groups that a user is a member of.
      *
-     * @param int $userId
+     * @param $userId
      *
      * @return array
      */
     public function getGroupsForUser(int $userId)
     {
-        if (null === $found = cache("{$userId}_groups"))
+        if (! $found = cache("{$userId}_groups"))
         {
             $found = $this->builder()
                 ->select('auth_groups_users.*, auth_groups.name, auth_groups.description')
@@ -111,13 +109,13 @@ class GroupModel extends Model
     /**
      * Returns an array of all users that are members of a group.
      *
-     * @param int $groupId
+     * @param $groupId
      *
      * @return array
      */
     public function getUsersForGroup(int $groupId)
     {
-        if (null === $found = cache("{$groupId}_users"))
+        if (! $found = cache("{$groupId}_users"))
         {
             $found = $this->builder()
                 ->select('auth_groups_users.*, users.*')
@@ -170,8 +168,8 @@ class GroupModel extends Model
     /**
      * Add a single permission to a single group, by IDs.
      *
-     * @param int $permissionId
-     * @param int $groupId
+     * @param $permissionId
+     * @param $groupId
      *
      * @return mixed
      */
@@ -191,8 +189,8 @@ class GroupModel extends Model
     /**
      * Removes a single permission from a single group.
      *
-     * @param int $permissionId
-     * @param int $groupId
+     * @param $permissionId
+     * @param $groupId
      *
      * @return mixed
      */
@@ -210,7 +208,7 @@ class GroupModel extends Model
     /**
      * Removes a single permission from all groups.
      *
-     * @param int $permissionId
+     * @param $permissionId
      *
      * @return mixed
      */

@@ -19,8 +19,8 @@ return [
 
     // Activation
     'activationNoUser'          => 'Impossibile trovare un utente con questo codice di attivazione.',
-    'activationSubject'         => 'Attiva il tuo account',
-    'activationSuccess'         => 'Conferma entro due ore il tuo <i>account</i> cliccando sul <i>link</i> di attivazione nell\'<i>email</i> che ti abbiamo inviato all\'indirizzo che ci hai indicato.',
+    'activationSubject'         => ' Richiesta attivazione account per Corso Formazione Filcams CGIL',
+    'activationSuccess'         => 'Conferma il tuo account facendo clic sul link di attivazione nell\'email che ti abbiamo inviato.',
     'activationResend'          => 'Invia ancora il messaggio di attivazione.',
     'notActivated'              => 'Questo account utente non è stato ancora attivato.',
     'errorSendingActivation'    => 'Impossibile inviare il messaggio di attivazione a: {0}',
@@ -33,17 +33,15 @@ return [
     // Forgotten Passwords
     'forgotDisabled'            => 'Resseting password option has been disabled.', // translate
     'forgotNoUser'              => 'Impossibile trovare un utente con questo indirizzo email.',
-    'forgotSubject'             => 'Istruzioni per il Ripristino della Password',
+    'forgotSubject'             => 'IIstruzioni ripristino password',
     'resetSuccess'              => 'La tua password è stata cambiata con successo. Effettua l\'accesso con le tue nuove credenziali.',
-    'forgotEmailSent'           => 'Hai ricevuto una email per procedere al reset della password. Segui le istruzioni che riceverai per email.',
-    'errorEmailSent'            => 'Impossibile inviare l\'email con le istruzioni per resettare la password all\'indirizzo: {0}',
-    'errorResetting'            => 'Impossibile inviare le istruzioni per resettare la password a: {0}',
+    'forgotEmailSent'           => 'Ti abbiamo inviato una email con le istruzioni per il recupero della password.',
+    'errorEmailSent'            => 'Impossibile inviare la email con le istruzioni per resettare la password all\'indirizzo: {0}', // translate
 
     // Passwords
-    // 'errorPasswordLength'       => 'La password deve contenere almeno {0, number} caratteri.',
-    'errorPasswordLength'       => 'La password deve essere composta da un minimo di {0, number} caratteri',
+    'errorPasswordLength'       => 'La password deve contenere almeno {0, number} caratteri.',
     'suggestPasswordLength'     => 'Una frase utilizzata come password - di lunghezza fino a 255 caratteri - la rende più sicura e facile da ricordare.',
-    'errorPasswordCommon'       => 'Si consiglia di creare una password maggiormente complessa e meno comune',
+    'errorPasswordCommon'       => 'La password non deve essere una password comune.',
     'suggestPasswordCommon'     => 'La password inserita è stata messa a confronto con oltre 65.000 password comuni, password violate e password interessate a leaks e hacks.',
     'errorPasswordPersonal'     => 'La password non possono contenere informazioni personali rielaborate.',
     'suggestPasswordPersonal'   => 'La password non dovrebbe contenere variazioni del tuo indirizzo email o del tuo nome utente.',
@@ -63,7 +61,7 @@ return [
     'permissionNotFound'        => 'Impossibile trovare il permesso: {0}',
 
     // Banned
-    'userIsBanned'              => 'Hai inserito un OTP o ID errato per 5 volte:<br /><ul><li>Se stai tentando l\'accesso potrai riprovare tra 10 minuti</li><li>Se stai effettuando una nuova registrazione è necessario attendere 2h e procedere con una nuova registrazione.</li></ul>',
+    'userIsBanned'              => 'L\'utente è stato bannato. Contatta l\'amministratore',
 
     // Too many requests
     'tooManyRequests'           => 'Troppe richieste. Attendere {0, number} secondi.',
@@ -83,15 +81,15 @@ return [
     'forgotYourPassword'        => 'Password dimenticata?',
     'password'                  => 'Password',
     'repeatPassword'            => 'Ripeti Password',
-    'emailOrUsername'           => 'Email',
+    'emailOrUsername'           => 'Email o nome utente',
     'username'                  => 'Nome utente',
-    'register'                  => 'Registrati',
-    'signIn'                    => 'Accedi',
-    'alreadyRegistered'         => 'Sei già registrato?',
-    'weNeverShare'              => '',
+    'register'                  => 'Registrazione',
+    'signIn'                    => 'Registrati',
+    'alreadyRegistered'         => 'Hai già un account?',
+    'weNeverShare'              => 'Non condivideremo mai il tuo indirizzo email con chiunque altro.',
     'resetYourPassword'         => 'Reimposta la tua password',
-    'enterCodeEmailPassword'    => 'Seleziona la tua nuova password e confermala.',
-    'token'                     => 'Token',
+    'enterCodeEmailPassword'    => 'È necessario registrare una nuova password per poter accedere alla piattaforma.<br>La nuova password deve contenere almeno 8 caratteri.',
+    'token'                     => 'Token.',
     'newPassword'               => 'Nuova Password',
     'newPasswordRepeat'         => 'Ripeti Nuova Password',
     'resetPassword'             => 'Reimposta Password',

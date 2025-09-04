@@ -33,9 +33,6 @@ trait AuthTestTrait
 			$fabricator->setOverrides($overrides);
 		}
 
-		/**
-		 * @var User $user
-		 */
 		$user = $fabricator->make();
 		$user->activate();
 

@@ -3,7 +3,6 @@
 use CodeIgniter\Entity\Entity;
 use Myth\Auth\Authorization\GroupModel;
 use Myth\Auth\Authorization\PermissionModel;
-use Myth\Auth\Password;
 
 class User extends Entity
 {
@@ -54,7 +53,34 @@ class User extends Entity
 	 */
 	public function setPassword(string $password)
 	{
-        $this->attributes['password_hash'] = Password::hash($password);
+        $config = config('Auth');
+
+        if (
+            (defined('PASSWORD_ARGON2I') && $config->hashAlgorithm == PASSWORD_ARGON2I)
+                ||
+            (defined('PASSWORD_ARGON2ID') && $config->hashAlgorithm == PASSWORD_ARGON2ID)
+            )
+        {
+            $hashOptions = [
+                'memory_cost' => $config->hashMemoryCost,
+                'time_cost'   => $config->hashTimeCost,
+                'threads'     => $config->hashThreads
+                ];
+        }
+        else
+        {
+            $hashOptions = [
+                'cost' => $config->hashCost
+                ];
+        }
+
+        $this->attributes['password_hash'] = password_hash(
+            base64_encode(
+                hash('sha384', $password, true)
+            ),
+            $config->hashAlgorithm,
+            $hashOptions
+        );
 
         /*
             Set these vars to null in case a reset password was asked.
@@ -74,9 +100,10 @@ class User extends Entity
      * Force a user to reset their password on next page refresh
      * or login. Checked in the LocalAuthenticator's check() method.
      *
-     * @throws \Exception
+     * @param User $user
      *
-     * @return $this
+     * @return User
+     * @throws \Exception
      */
     public function forcePasswordReset()
     {
@@ -114,12 +141,6 @@ class User extends Entity
 		return $this;
 	}
 
-    public function generateSMSOTP()
-    {
-        $this->attributes['phone_hash'] = mt_rand(10000,99999);
-		return $this;
-    }
-
     /**
      * Activate user.
      *
@@ -153,16 +174,6 @@ class User extends Entity
     public function isActivated(): bool
     {
         return isset($this->attributes['active']) && $this->attributes['active'] == true;
-    }
-
-    /**
-     * Checks to see if a user have activated phone or uuid
-     *
-     * @return bool
-     */
-    public function isPhoneActivated(): bool
-    {
-        return isset($this->attributes['phone_active']) && $this->attributes['phone_active'] == true;
     }
 
 	/**

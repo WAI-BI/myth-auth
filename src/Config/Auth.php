@@ -4,10 +4,6 @@ use CodeIgniter\Config\BaseConfig;
 
 class Auth extends BaseConfig
 {
-
-	public $services_base_path = 'http://127.0.0.1:8000/api/';
-
-
 	/**
 	 * --------------------------------------------------------------------
 	 * Default User Group
@@ -18,7 +14,7 @@ class Auth extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $defaultUserGroup = 'registered';
+	public $defaultUserGroup;
 
 	/**
 	 * --------------------------------------------------------------------
@@ -45,12 +41,6 @@ class Auth extends BaseConfig
 		'reset'		   		=> 'reset',
 		'emailForgot'	 	=> 'Myth\Auth\Views\emails\forgot',
 		'emailActivation' 	=> 'Myth\Auth\Views\emails\activation',
-		'emailOTP'			=>	'Myth\Auth\Views\emails\emailOTP',
-		'send_sms_otp'		=>	'Myth\Auth\Views\platone\send_sms_otp',
-		'send_uuid'			=>	'Myth\Auth\Views\platone\send_uuid',
-		'two_step'			=>	'Myth\Auth\Views\platone\send_email_otp',
-        'EmailBannedSMSOTP' =>  'Myth\Auth\Views\emails\emailbannedsmsotp',
-        'EmailBannedUuid'   =>  'Myth\Auth\Views\emails\emailbanneduuid',
 	];
 
 	/**
@@ -74,10 +64,6 @@ class Auth extends BaseConfig
 	public $validFields = [
 		'email',
 		'username',
-		'cod_fis',
-		'first_name',
-		'last_name',
-		'phone'
 	];
 
 	/**
@@ -153,62 +139,15 @@ class Auth extends BaseConfig
 
 	/**
 	 * --------------------------------------------------------------------
-	 * Allow CSV Codice Fiscale Controll
-	 * --------------------------------------------------------------------
-	 *
-	 * When enabled user registered must have his Fiscal Code must be inside
-	 * e CSV files.
-	 *
-	 * @var bool
-	 */
-	public $allowCSVcontrol = true;
-
-	/**
-	 * --------------------------------------------------------------------
-	 * Allow OTP Email on Login
-	 * --------------------------------------------------------------------
-	 *
-	 * When enabled user login have 2-step verification with email
-	 *
-	 * @var bool
-	 */
-	public $allowOTPEmail = false;
-
-    /**
-	 * --------------------------------------------------------------------
-	 * Allow reCaptcha
-	 * --------------------------------------------------------------------
-	 *
-	 * When enabled user login have google reCaptcha verification
-	 *
-	 * @var bool
-	 */
-	public $allowreCaptcha = false;
-
-	/**
-	 * --------------------------------------------------------------------
 	 * Require Confirmation Registration via Email
 	 * --------------------------------------------------------------------
 	 *
 	 * When enabled, every registered user will receive an email message
 	 * with an activation link to confirm the account.
 	 *
-	 * @var string|null Name of the ActivatorInterface class
+	 * @var string Name of the ActivatorInterface class
 	 */
 	public $requireActivation = 'Myth\Auth\Authentication\Activators\EmailActivator';
-
-	/**
-	 * --------------------------------------------------------------------
-	 * Require Confirmation phone via Otp
-	 * --------------------------------------------------------------------
-	 *
-	 * When enabled, every registered user will receive an OTP message
-	 * with an Confirmation code to write.
-	 *
-	 * @var string|null Name of the ActivatorInterface class
-	 */
-	public $requireSMSOTP = 'Myth\Auth\Authentication\Activators\PhoneActivator';
-
 
 	/**
 	 * --------------------------------------------------------------------
@@ -218,7 +157,7 @@ class Auth extends BaseConfig
 	 * When enabled, users will have the option to reset their password
 	 * via the specified Resetter. Default setting is email.
 	 *
-	 * @var string|null Name of the ResetterInterface class
+	 * @var string Name of the ResetterInterface class
 	 */
 	public $activeResetter = 'Myth\Auth\Authentication\Resetters\EmailResetter';
 
@@ -278,7 +217,7 @@ class Auth extends BaseConfig
 	 */
 	public $hashAlgorithm = PASSWORD_DEFAULT;
 
-	/**
+	/*
 	 * --------------------------------------------------------------------
 	 * ARGON2i/D Algorithm options
 	 * --------------------------------------------------------------------
@@ -364,10 +303,6 @@ class Auth extends BaseConfig
 	public $userActivators = [
 		'Myth\Auth\Authentication\Activators\EmailActivator' => [
 			'fromEmail' => null,
-			'fromName' => null,
-		],
-		'Myth\Auth\Authentication\Activators\PhoneActivator' => [
-			'fromPhone' => null,
 			'fromName' => null,
 		],
 	];

@@ -1,6 +1,7 @@
 <?php namespace Myth\Auth\Authentication\Passwords;
 
 use CodeIgniter\Entity\Entity;
+use Myth\Auth\Exceptions\AuthException;
 
 /**
  * Class NothingPersonalValidator
@@ -32,7 +33,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
      *
      * @return boolean
      */
-    public function check(string $password, ?Entity $user = null): bool
+    public function check(string $password, Entity $user = null): bool
     {
         $password = \strtolower($password);
 
@@ -67,17 +68,6 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
      */
     protected function isNotPersonal($password, $user)
     {
-        /*echo "<pre>";
-        //print_r($user);
-        echo $user->username;
-        echo $user->email;
-        echo "</pre>";
-        exit;*/
-
-        if (!isset($user->username) OR !isset($user->email)) {
-            return true;
-        }
-
         $userName = \strtolower($user->username);
         $email = \strtolower($user->email);
         $valid = true;
@@ -96,9 +86,6 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
         {
             // Take username apart for use as search needles
             $needles = $this->strip_explode($userName);
-
-           
-            echo $email."<br />";
 
             // extract local-part and domain parts from email as separate needles
             [$localPart, $domain] = \explode('@', $email);

@@ -1,8 +1,9 @@
 <?php namespace Myth\Auth\Authentication;
 
+use Config\App;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Model;
-use Myth\Auth\Config\Auth as AuthConfig;
+use Config\Services;
 use Myth\Auth\Entities\User;
 use Myth\Auth\Exceptions\AuthException;
 use Myth\Auth\Exceptions\UserNotFoundException;
@@ -11,7 +12,7 @@ use Myth\Auth\Models\LoginModel;
 class AuthenticationBase
 {
     /**
-     * @var User|null
+     * @var User
      */
     protected $user;
 
@@ -31,7 +32,7 @@ class AuthenticationBase
     protected $error;
 
     /**
-     * @var AuthConfig
+     * @var \Config\Auth
      */
     protected $config;
 
@@ -54,11 +55,11 @@ class AuthenticationBase
      * Whether to continue instead of throwing exceptions,
      * as defined in config.
      *
-     * @return bool
+     * @return string
      */
     public function silent()
     {
-        return (bool) $this->config->silent;
+        return $this->config->silent;
     }
 
 
@@ -67,7 +68,7 @@ class AuthenticationBase
      * NOTE: does not perform validation. All validation should
      * be done prior to using the login method.
      *
-     * @param User $user
+     * @param \Myth\Auth\Entities\User $user
      * @param bool                     $remember
      *
      * @return bool
@@ -84,7 +85,7 @@ class AuthenticationBase
         $this->user = $user;
 
         // Always record a login attempt
-        $ipAddress = service('request')->getIPAddress();
+        $ipAddress = Services::request()->getIPAddress();
         $this->recordLoginAttempt($user->email, $ipAddress, $user->id ?? null, true);
 
         // Regenerate the session ID to help protect against session fixation
@@ -97,7 +98,7 @@ class AuthenticationBase
         session()->set('logged_in', $this->user->id);
 
         // When logged in, ensure cache control headers are in place
-        service('response')->noCache();
+        Services::response()->noCache();
 
         if ($remember && $this->config->allowRemembering)
         {
@@ -135,9 +136,10 @@ class AuthenticationBase
         {
             // Store our current user object
             $this->user = $this->userModel->find($userID);
-           
+
             return $this->user instanceof User;
         }
+
         return false;
     }
 
@@ -242,7 +244,7 @@ class AuthenticationBase
 
         // Save it to the user's browser in a cookie.
         $appConfig = config('App');
-        $response = service('response');
+        $response = \Config\Services::response();
 
         // Create the cookie
         $response->setCookie(
@@ -252,7 +254,7 @@ class AuthenticationBase
             $appConfig->cookieDomain,
             $appConfig->cookiePath,
             $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,                   // Only send over HTTPS?
+            $appConfig->cookieHTTPOnly,                 // Only send over HTTPS?
             true                    					// Hide from Javascript?
         );
     }
@@ -287,14 +289,14 @@ class AuthenticationBase
 
         // Create the cookie
         set_cookie(
-            'remember',      						// Cookie Name
-            $selector.':'.$validator, 				// Value
-            (string) $this->config->rememberLength, // # Seconds until it expires
+            'remember',      							// Cookie Name
+            $selector.':'.$validator, 					// Value
+            $this->config->rememberLength,  			// # Seconds until it expires
             $appConfig->cookieDomain,
             $appConfig->cookiePath,
             $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,               // Only send over HTTPS?
-            true                                    // Hide from Javascript?
+            $appConfig->cookieHTTPOnly,                 // Only send over HTTPS?
+            true                  						// Hide from Javascript?
         );
     }
 
@@ -313,7 +315,7 @@ class AuthenticationBase
     /**
      * Returns the User instance for the current logged in user.
      *
-     * @return User|null
+     * @return \Myth\Auth\Entities\User|null
      */
     public function user()
     {
@@ -350,7 +352,7 @@ class AuthenticationBase
      * Sets the model that should be used to work with
      * user accounts.
      *
-     * @param Model $model
+     * @param \CodeIgniter\Model $model
      *
      * @return $this
      */
@@ -365,7 +367,7 @@ class AuthenticationBase
      * Sets the model that should be used to record
      * login attempts (but failed and successful).
      *
-     * @param LoginModel $model
+     * @param Model $model
      *
      * @return $this
      */

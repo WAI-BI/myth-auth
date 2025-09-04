@@ -19,16 +19,6 @@ use Myth\Auth\Exceptions\AuthException;
  */
 class CompositionValidator extends BaseValidator implements ValidatorInterface
 {
-	/**
-	 * @var string
-	 */
-    protected $error = '';
-
-	/**
-	 * @var string
-	 */
-    protected $suggestion = '';
-
     /**
      * Returns true when the password passes this test. 
      * The password will be passed to any remaining validators.
@@ -39,7 +29,7 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function check(string $password, $user=null): bool
+    public function check(string $password, Entity $user=null): bool
     {
         if (empty($this->config->minimumPasswordLength))
         {
@@ -48,28 +38,12 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
 
         $passed = strlen($password) >= $this->config->minimumPasswordLength;
 
-        if (! $passed)
+        if(! $passed)
         {
-            $this->error      = lang('Auth.errorPasswordLength', [$this->config->minimumPasswordLength]);
+            $this->error = lang('Auth.errorPasswordLength', [$this->config->minimumPasswordLength]);
             $this->suggestion = lang('Auth.suggestPasswordLength');
             
             return false;
-        }
-
-        if (!preg_match('/[A-Z]/', $password)) {
-            $this->error      = "La password deve contenere almento un carattere maiuscolo";
-            $this->suggestion = "La password deve contenere almento un carattere maiuscolo";
-            
-            return false;
-        }
-
-        if (!(str_contains($password, '#') || str_contains($password, '$') || str_contains($password, '@') || str_contains($password, '!') || str_contains($password, '%') || str_contains($password, '&'))) {
-        
-            $this->error      = "La password deve contenere almento un carattere speciale";
-            $this->suggestion = "La password deve contenere almento un carattere speciale";
-            
-            return false;
-        
         }
         
         return true;

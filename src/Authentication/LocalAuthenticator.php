@@ -1,12 +1,9 @@
 <?php namespace Myth\Auth\Authentication;
 
 use CodeIgniter\Router\Exceptions\RedirectException;
+use \Config\Services;
 use Myth\Auth\Entities\User;
 use Myth\Auth\Exceptions\AuthException;
-use Myth\Auth\Password;
-use Myth\Auth\Models\AuthUserOtpAttempts;
-use Myth\Auth\Models\AuthGuuidCodfis;
-
 
 class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface
 {
@@ -25,7 +22,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
         if (empty($this->user))
         {
             // Always record a login attempt, whether success or not.
-            $ipAddress = service('request')->getIPAddress();
+            $ipAddress = Services::request()->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
 
             $this->user = null;
@@ -35,35 +32,11 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
         if ($this->user->isBanned())
         {
             // Always record a login attempt, whether success or not.
-            $ipAddress = service('request')->getIPAddress();
+            $ipAddress = Services::request()->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
 
             $this->error = lang('Auth.userIsBanned');
-
-            $this->user = null;
-            return false;
-        }
-
-        if (! $this->user->isPhoneActivated() AND ! $this->user->isActivated()) {
-            // Always record a login attempt, whether success or not.
-            $ipAddress = service('request')->getIPAddress();
-            $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
-
-            $param = http_build_query([
-                'login' => urlencode($credentials['email'] ?? $credentials['username'])
-            ]);
-
-            //controllo se ha un ID associato o se deve confermare veramente il suo telefono
-            $auc = new AuthGuuidCodfis();
-
-            $check = $auc->where("cod_fis", $this->user->cod_fis)->first();
-
-            if (isset($check['uuid']) AND $check['uuid'] != '') {
-                $this->error = lang('Platone.notPhoneActivatedId') .' '. anchor(base_url('uuid_otp/'.$this->user->username), lang('Platone.activationResendId'));
-            } else {
-                $this->error = lang('Platone.notPhoneActivated') .' '. anchor(base_url('sms_otp/'.$this->user->username), lang('Platone.activationResendPhone'));
-            }
-
+            
             $this->user = null;
             return false;
         }
@@ -71,7 +44,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
         if (! $this->user->isActivated())
         {
             // Always record a login attempt, whether success or not.
-            $ipAddress = service('request')->getIPAddress();
+            $ipAddress = Services::request()->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false);
 
             $param = http_build_query([
@@ -100,18 +73,6 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             if ($this->user && $this->user->force_pass_reset)
             {
                 throw new RedirectException(route_to('reset-password') .'?token='.$this->user->reset_hash);
-            }
-
-            if ($this->config->allowOTPEmail) {
-                //controllo che abbia realmente eseguito un accesso con OTP
-                $AuthUserOtpAttempts = new AuthUserOtpAttempts();
-                $check = $AuthUserOtpAttempts->where("user_id", $this->user->id)->where("session_id", session_id())->where("success", "1")->first();
-
-                if (!$check) {
-                    if ($this->user->status != 'banned') {
-                        throw new RedirectException(route_to('two_step'));
-                    }
-                }
             }
 
             return true;
@@ -170,25 +131,36 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     public function validate(array $credentials, bool $returnUser=false)
     {
         // Can't validate without a password.
-        if (empty($credentials['password']) || count($credentials) < 2)
-        {
-            return false;
-        }
+        // if (empty($credentials['password']) || empty($credentials['tmp_password']) || count($credentials) < 2)
+        // {
+        //     return false;
+        // }
 
         // Only allowed 1 additional credential other than password
-        $password = $credentials['password'];
-        unset($credentials['password']);
+        // $password = $credentials['password'];
+        
+        if (isset($credentials['password']) && !empty($credentials['password'])) {
+            $is_tmp = false;
+            $password = $credentials['password'];
+            unset($credentials['password']);
+        } 
 
-        if (count($credentials) > 1)
-        {
-            throw AuthException::forTooManyCredentials();
-        }
+        if (isset($credentials['tmp_password']) && !empty($credentials['tmp_password'])) {
+            $is_tmp = true;
+            $password = $credentials['tmp_password'];
+            unset($credentials['tmp_password']);
+        } 
+
+        // if (count($credentials) > 1)
+        // {
+        //     throw AuthException::forTooManyCredentials();
+        // }
 
         // Ensure that the fields are allowed validation fields
-        if (! in_array(key($credentials), $this->config->validFields))
-        {
-            throw AuthException::forInvalidFields(key($credentials));
-        }
+        // if (! in_array(key($credentials), $this->config->validFields))
+        // {
+        //     throw AuthException::forInvalidFields(key($credentials));
+        // }
 
         // Can we find a user with those credentials?
         $user = $this->userModel->where($credentials)
@@ -200,8 +172,21 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             return false;
         }
 
-        // Now, try matching the passwords.
-        if (! Password::verify($password, $user->password_hash))
+
+        if ($is_tmp) {
+            // Now, try matching the passwords.
+            $result = password_verify(base64_encode(
+                hash('sha384', $password, true)
+            ), $user->tmp_password);
+        } else {
+            // Now, try matching the passwords.
+            $result = password_verify(base64_encode(
+                hash('sha384', $password, true)
+            ), $user->password_hash);
+        }
+
+
+        if (! $result)
         {
             $this->error = lang('Auth.invalidPassword');
             return false;
@@ -211,12 +196,16 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
         // This would be due to the hash algorithm or hash
         // cost changing since the last time that a user
         // logged in.
-        if (Password::needsRehash($user->password_hash, $this->config->hashAlgorithm))
+        if (password_needs_rehash($user->password_hash, $this->config->hashAlgorithm))
         {
             $user->password = $password;
             $this->userModel->save($user);
         }
-
+        if ($is_tmp) {
+            $user->tmp_password = null;
+            $this->userModel->save($user);
+        }
+        
         return $returnUser
             ? $user
             : true;

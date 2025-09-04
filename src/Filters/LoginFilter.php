@@ -1,17 +1,24 @@
 <?php namespace Myth\Auth\Filters;
 
+use Config\Services;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
-use Config\App;
 
 class LoginFilter implements FilterInterface
 {
 	/**
-	 * Verifies that a user is logged in, or redirects to login.
+	 * Do whatever processing this filter needs to do.
+	 * By default it should not return anything during
+	 * normal execution. However, when an abnormal state
+	 * is found, it should return an instance of
+	 * CodeIgniter\HTTP\Response. If it does, script
+	 * execution will end and that Response will be
+	 * sent back to the client, allowing for error pages,
+	 * redirects, etc.
 	 *
-	 * @param RequestInterface $request
-	 * @param array|null $params
+	 * @param \CodeIgniter\HTTP\RequestInterface $request
+	 * @param array|null                         $params
 	 *
 	 * @return mixed
 	 */
@@ -27,13 +34,6 @@ class LoginFilter implements FilterInterface
 			->setScheme('')
 			->stripQuery('token');
 
-		$config = config(App::class);
-		if($config->forceGlobalSecureRequests)
-		{
-			# Remove "https:/"
-			$current = substr($current, 7);
-		}
-
 		// Make sure this isn't already a login route
 		if (in_array((string)$current, [route_to('login'), route_to('forgot'), route_to('reset-password'), route_to('register'), route_to('activate-account')]))
 		{
@@ -41,7 +41,7 @@ class LoginFilter implements FilterInterface
 		}
 
 		// if no user is logged in then send to the login form
-		$authenticate = service('authentication');
+		$authenticate = Services::authentication();
 		if (! $authenticate->check())
 		{
 			session()->set('redirect_url', current_url());
@@ -49,14 +49,24 @@ class LoginFilter implements FilterInterface
 		}
 	}
 
+	//--------------------------------------------------------------------
+
 	/**
-	 * @param RequestInterface  $request
-	 * @param ResponseInterface $response
-	 * @param array|null $arguments
+	 * Allows After filters to inspect and modify the response
+	 * object as needed. This method does not allow any way
+	 * to stop execution of other after filters, short of
+	 * throwing an Exception or Error.
+	 *
+	 * @param \CodeIgniter\HTTP\RequestInterface  $request
+	 * @param \CodeIgniter\HTTP\ResponseInterface $response
+	 * @param array|null                          $arguments
 	 *
 	 * @return void
 	 */
 	public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
 	{
+
 	}
+
+	//--------------------------------------------------------------------
 }

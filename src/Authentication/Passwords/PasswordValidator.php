@@ -1,13 +1,13 @@
 <?php namespace Myth\Auth\Authentication\Passwords;
 
-use Myth\Auth\Config\Auth as AuthConfig;
+use Myth\Auth\Config\Auth;
 use Myth\Auth\Entities\User;
 use Myth\Auth\Exceptions\AuthException;
 
 class PasswordValidator
 {
 	/**
-	 * @var AuthConfig
+	 * @var Auth
 	 */
 	protected $config;
 
@@ -15,7 +15,7 @@ class PasswordValidator
 
 	protected $suggestion;
 
-	public function __construct(AuthConfig $config)
+	public function __construct(Auth $config)
 	{
 		$this->config = $config;
 	}
@@ -31,7 +31,6 @@ class PasswordValidator
 	 */
 	public function check(string $password, User $user = null): bool
 	{
-
 		if (is_null($user))
 		{
 			throw AuthException::forNoEntityProvided();

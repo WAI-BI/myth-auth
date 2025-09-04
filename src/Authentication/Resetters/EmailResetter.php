@@ -1,7 +1,8 @@
 <?php namespace Myth\Auth\Authentication\Resetters;
 
 use Config\Email;
-use Myth\Auth\Entities\User;
+use CodeIgniter\Entity\Entity;
+use CodeIgniter\Config\Services;
 
 /**
  * Class EmailResetter
@@ -13,25 +14,45 @@ use Myth\Auth\Entities\User;
 class EmailResetter extends BaseResetter implements ResetterInterface
 {
     /**
+     * @var string
+     */
+    protected $error;
+
+    /**
      * Sends a reset email
      *
      * @param User $user
      *
-     * @return bool
+     * @return mixed
      */
-    public function send(User $user = null): bool
+    public function send(Entity $user = null): bool
     {
-        $email = service('email');
+        $email = Services::email();
         $config = new Email();
 
         $settings = $this->getResetterSettings();
 
-        $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
-              ->setTo($user->email)
-              ->setSubject(lang('Auth.forgotSubject'))
-              ->setMessage(view($this->config->views['emailForgot'], ['hash' => $user->reset_hash]))
-              ->setMailType('html')
-              ->send();
+        //Se è stato già stata configurata la libreria carico la configurazione email dal database
+        $email_config = new \App\Libraries\EmailConfiguration; 
+        
+        if ($email_config->initialized()) {
+            
+            $sent = $email->setFrom($email_config->get_configuration()['fromEmail'], $email_config->get_configuration()['fromName'])
+                ->setTo($user->email)
+                ->setSubject(lang('Auth.forgotSubject'))
+                ->setMessage(view($this->config->views['emailForgot'], ['hash' => $user->reset_hash]))
+                ->setMailType('html')
+                ->send();
+        } else {
+            $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
+                ->setTo($user->email)
+                ->setSubject(lang('Auth.forgotSubject'))
+                ->setMessage(view($this->config->views['emailForgot'], ['hash' => $user->reset_hash]))
+                ->setMailType('html')
+                ->send();
+        }
+
+       
 
         if (! $sent)
         {
@@ -41,4 +62,15 @@ class EmailResetter extends BaseResetter implements ResetterInterface
 
         return true;
     }
+
+    /**
+     * Returns the error string that should be displayed to the user.
+     *
+     * @return string
+     */
+    public function error(): string
+    {
+        return $this->error ?? '';
+    }
+
 }
