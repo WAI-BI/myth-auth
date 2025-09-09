@@ -52,7 +52,10 @@ class AuthController extends Controller
         // Set a return URL if none is specified
         $_SESSION['redirect_url'] = session('redirect_url') ?? previous_url() ?? base_url();
 
-		return $this->_render($this->config->views['login'], ['config' => $this->config]);
+		// echo json_encode($_SESSION);
+		// exit;
+
+		return $this->_render($this->config->views['login'], ['config' => $this->config, 'err' => $err ?? null]);
 	}
 
 	/**
@@ -85,13 +88,14 @@ class AuthController extends Controller
 		// Try to log them in...
 		if (! $this->auth->attempt([$type => $login, 'password' => $password], $remember))
 		{
-            // SE LOGIN E' FALSO PROVO A LOGGARE CON LA PSW TEMPORANEA
+			// SE LOGIN E' FALSO PROVO A LOGGARE CON LA PSW TEMPORANEA
             $this->auth->attempt([$type => $login, 'tmp_password' => $password], $remember);
-
-            // echo json_encode(['username' => $login, 'tmp_password' => $password]); exit;
+			
+			$err = $this->auth->error() ?? lang('Auth.badAttempt');
+			$_SESSION['err'] = $err;
 
             $redirectURL = base_url();
-			return redirect()->to($redirectURL)->withInput()->with('error', $this->auth->error() ?? lang('Auth.badAttempt'));
+			return redirect()->to($redirectURL)->withInput()->with('errors', $err);
 		}
 
 		// Is the user being forced to reset their password?

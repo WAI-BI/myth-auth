@@ -17,3 +17,11 @@
 	<?php endforeach ?>
 	</ul>
 <?php endif ?>
+
+<?php if (isset($_SESSION['err'])) : ?>
+	<div class="alert alert-danger">
+	<?= $_SESSION['err'] ?>
+	<?php unset($_SESSION['err']); ?>
+	</div>
+<?php endif; ?>
+
