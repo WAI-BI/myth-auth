@@ -33,7 +33,7 @@ return [
     // Forgotten Passwords
     'forgotDisabled'            => 'Resseting password option has been disabled.', // translate
     'forgotNoUser'              => 'Impossibile trovare un utente con questo indirizzo email.',
-    'forgotSubject'             => 'IIstruzioni ripristino password',
+    'forgotSubject'             => 'Istruzioni ripristino password',
     'resetSuccess'              => 'La tua password è stata cambiata con successo. Effettua l\'accesso con le tue nuove credenziali.',
     'forgotEmailSent'           => 'Ti abbiamo inviato una email con le istruzioni per il recupero della password.',
     'errorEmailSent'            => 'Impossibile inviare la email con le istruzioni per resettare la password all\'indirizzo: {0}', // translate
